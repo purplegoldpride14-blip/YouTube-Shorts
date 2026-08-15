@@ -1,0 +1,7 @@
+Write me a short YouTube Shorts description based on this video's topic and
+script (if there is one). Two to four sentences, not a long-form summary —
+this is a Short, and a wall of text under it reads as a mismatch. Cover what
+the video actually shows (the decade/topic, the specific angle), not a
+generic "join us as we explore nostalgia" line. Include #shorts and two or
+three specific niche/decade hashtags at the end unless the project has
+hashtags disabled. Provide it clean and ready to paste directly into YouTube.
