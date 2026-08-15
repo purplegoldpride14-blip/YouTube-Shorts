@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+.DS_Store
+
+# Generated media never belongs in git. Frames alone ran the old repo to 1.5 GB.
+projects/*/audio/
+projects/*/frames/
+projects/*/out/
+*.mp4
+*.wav
+*.mp3
+*.png
+*.jpg
