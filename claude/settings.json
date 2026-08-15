@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__OpenArt__openart_creation_get",
+      "mcp__NextLev__search_viral_videos_small_channels",
+      "Bash(curl -sS -o *)"
+    ]
+  }
+}
