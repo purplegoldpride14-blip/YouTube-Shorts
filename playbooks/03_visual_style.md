@@ -73,7 +73,9 @@ End the style block with `no text anywhere in the image` — for narration ==
 "full", word-synced captions are burned in later by `assemble.py` as a
 separate overlay, not baked into the asset. For narration == "none",
 `assemble.py` burns no text at all, so there's even less reason for the
-generated asset to carry any.
+generated asset to carry any. This is about visual text only — a clip's
+spoken dialogue (asset_mode == clips, see step 5) is audio, not burned text,
+and is unaffected by this rule.
 
 ## 5. Lock the style on beat 1
 
@@ -89,16 +91,28 @@ drift across beats. Exactly 7 beats this way, each held for its scene-plan
 duration with Ken Burns motion (narration == none: an equal 1/7th of 30s
 each; narration == full: whatever the narration-driven split gives it).
 
-**asset_mode == clips** — OpenArt Kling 2.5:
+**asset_mode == clips** — OpenArt Gemini Omni Flash:
 ```
-model Kling 2.5 | quality mode | 5s | audio off | 9:16
+model gemini-omni-flash | text2video | 4s | 9:16
 ```
-Audio off because this pipeline's own narration or music track is the only
-audio in the final output — a clip's own generated audio would clash with it
-or get discarded either way, so don't spend the generation on it. Exactly 4
-clips this way; a clip is trimmed if its beat is shorter than 5s, looped if
-longer (`assemble.py` handles this automatically from `scenes.json`'s beat
-durations — nothing to do here beyond generating the clip itself).
+Audio is native and always on for this model — not a parameter to set, every
+clip generates its own synchronized dialogue/SFX/music. For narration ==
+"none" projects, that generated audio becomes the Short's own soundtrack (see
+step 7 below); for narration == "full" projects `assemble.py` strips it so it
+can't clash with the read narration track, so don't bother writing spoken
+lines into clip prompts there. Exactly 4 clips this way; a clip is trimmed if
+its beat is shorter than 4s, looped if longer (`assemble.py` handles this
+automatically from `scenes.json`'s beat durations — nothing to do here beyond
+generating the clip itself). Keep dialogue-bearing beats close to 4s: a loop
+repeats the line, a trim can cut it off mid-sentence.
+
+**Writing dialogue into a clip's prompt (narration == "none" only).** There's
+no separate script/TTS stage for clips — if a beat needs someone talking, say
+exactly what they say as part of the prompt itself, e.g. `medium shot, a
+woman turns to camera and says: "some day I'll get out of this town"`. Keep
+it to one short line per 4s beat — the same pacing logic as narration
+(roughly 2.5 words/sec) applies, just spoken by Gemini Omni Flash instead of
+TTS.
 
 Show beat 1. Wait. This is the second and last approval gate. If rejected,
 ask what to change, edit the style block, regenerate, show it again. Every

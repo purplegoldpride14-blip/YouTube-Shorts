@@ -68,8 +68,8 @@ This is the first of two approval gates. Wait for the answer.
 
 > How should this one be made?
 >
-> Visuals: 1. Still images (7 beats, each an equal 1/7th of 30s)   2. Motion clips (4 beats)
-> Voice-over: 1. Full script   2. None — music bed or fully silent
+> Visuals: 1. Still images (7 beats, each an equal 1/7th of 30s)   2. Motion clips (4 beats, native spoken audio via Gemini Omni Flash)
+> Voice-over: 1. Full script   2. None — scored some other way
 
 Write the answers, along with the chosen topic:
 
@@ -78,12 +78,18 @@ python3 new_project.py <slug> --asset-mode images|clips --narration full|none \
     --niche "nostalgia" --topic "..."
 ```
 
-If voice-over is "none", also ask whether the soundtrack should be a music
-bed or fully silent, and write it immediately too:
+If voice-over is "none", also ask about the soundtrack and write it
+immediately:
 
 ```bash
 python3 new_project.py <slug> --audio music|none
 ```
+
+For still images this is literally "music bed or fully silent." For motion
+clips it's not — Gemini Omni Flash generates synchronized audio (dialogue,
+SFX, music) with every clip regardless, so ask instead whether a music bed
+should ALSO be mixed in underneath that generated audio ("music") or not
+("none"); there's no fully-silent option for clips.
 
 ## 4. Pick the title
 

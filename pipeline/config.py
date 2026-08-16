@@ -15,17 +15,29 @@ output IS the Short.
 #   asset_mode: "images" | "clips"
 #     images -> OpenArt Nano Banana 2 stills, Ken Burns motion, fixed at
 #               IMAGES_PER_SHORT beats
-#     clips  -> OpenArt Kling 2.5 video clips, stitched, fixed at
-#               CLIPS_PER_SHORT beats
+#     clips  -> OpenArt Gemini Omni Flash video clips, stitched, fixed at
+#               CLIPS_PER_SHORT beats. Native synchronized audio (dialogue,
+#               SFX, music) — the clip's OWN generated audio is kept in the
+#               output for narration == "none" projects, see VIDEO_AUDIO.
 #   narration: "full" | "none"
 #     full -> voiced script (30-45s average), TTS, burned captions from the
-#             transcript
-#     none -> no voice-over, no burned text of any kind; silent or scored by
-#             the audio field below
+#             transcript. asset_mode == "clips" here still strips each
+#             clip's own generated audio (VIDEO_AUDIO doesn't apply) so it
+#             can't clash with the read narration track.
+#     none -> no burned text of any kind. asset_mode == "images": silent or
+#             scored by the audio field below. asset_mode == "clips" with
+#             VIDEO_AUDIO True: each clip's own generated dialogue/audio IS
+#             the soundtrack — audio below only decides whether a music bed
+#             is ALSO mixed in underneath it, ducked.
 #   audio: "music" | "none" (narration == "none" projects only — a "full"
 #          project's audio is always its narration track)
-#     music -> audio/music.* looped/trimmed to a bed under the visuals
-#     none  -> no audio track in the output at all
+#     asset_mode == "images":
+#       music -> audio/music.* looped/trimmed to a bed under the visuals
+#       none  -> no audio track in the output at all
+#     asset_mode == "clips" (VIDEO_AUDIO True):
+#       music -> audio/music.* mixed in underneath the clips' own audio,
+#                ducked (ties to MUSIC_DUCK_LUFS, not MUSIC_BED_LUFS)
+#       none  -> the clips' own generated audio only, no added music bed
 VALID_ASSET_MODES = ("images", "clips")
 VALID_NARRATION = ("full", "none")
 VALID_AUDIO = ("music", "none")
@@ -110,16 +122,30 @@ AUTO_ENHANCE_PROMPT = False  # ALWAYS false - it rewrites the locked style block
 MIN_IMAGE_BYTES = 10000
 
 # ---------- clips (asset_mode == "clips") ----------
-# Kling 2.5 via OpenArt. Confirm the exact model id string against
-# openart_model_list before the first real run — "kling-2.5" below is the
-# human name given, not a verified API identifier.
-VIDEO_MODEL = "kling-2.5"
+# Google Gemini Omni Flash via OpenArt (model id "gemini-omni-flash",
+# mode "text2video"). Verified against openart_model_list /
+# openart_model_cost directly — no "veo-3.1" model exists in OpenArt's
+# catalog, and this is the closest available: Google-made, native
+# synchronized audio (dialogue, SFX, music) baked into every generation,
+# not a togglable field. There is no resolution or quality-tier parameter
+# exposed for this model — output resolution isn't selectable through
+# OpenArt. At duration 4 / aspectRatio "9:16" this costs 200 credits per
+# clip (openart_model_cost, verified). Duration accepts any integer 3-10.
+#
+# Fallback, if Gemini's dialogue quality isn't good enough: OpenArt's own
+# model description names "byte-plus-seedance-2" (displayName "Seedance
+# 2.0") as "the pick for video with a spoken voice" — 400 credits per 5s
+# clip at 720p with generateAudio true, real resolution/duration control.
+# Swap VIDEO_MODEL/VIDEO_MODE below and re-verify params with
+# openart_model_form_get before the next run if switching.
+VIDEO_MODEL = "gemini-omni-flash"
+VIDEO_MODE = "text2video"
 VIDEO_ASPECT = "9:16"
-VIDEO_QUALITY_MODE = "quality"   # as opposed to a faster/draft mode, if OpenArt exposes one
-VIDEO_AUDIO = False              # clip audio off — this pipeline's own narration/music track
-                                  # is the only audio in the final output, never the clip's own
-VIDEO_CLIP_SEC = 5.0             # length OpenArt renders per submission; beats longer than
-                                  # this loop the clip, beats shorter than this trim it
+VIDEO_AUDIO = True                # native to this model - the clip's own generated audio
+                                   # (dialogue etc.) is kept for narration == "none" projects;
+                                   # narration == "full" still strips it (see project modes above)
+VIDEO_CLIP_SEC = 4.0              # length OpenArt renders per submission; beats longer than
+                                   # this loop the clip, beats shorter than this trim it
 MIN_VIDEO_BYTES = 200000
 
 # ---------- video output ----------

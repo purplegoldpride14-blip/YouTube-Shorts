@@ -38,7 +38,7 @@ size limit, to chat in chunks).
 
 - Python 3.9+, ffmpeg (preflight installs it), curl
 - Descript MCP for the transcript SRT — narration == "full" projects only
-- OpenArt MCP for the images (Nano Banana 2) or clips (Kling 2.5)
+- OpenArt MCP for the images (Nano Banana 2) or clips (Gemini Omni Flash)
 - NextLev MCP is optional but makes the topic research much better
 
 No pip installs. Everything in `pipeline/` is stdlib.
@@ -68,14 +68,20 @@ deliverable.
 | images | full | narration | 7 Nano-Banana-2 stills, Ken Burns motion, a voiced script, word-synced captions. |
 | images | none | music | 7 stills, Ken Burns motion, each an equal 1/7th of a 30s timeline, scored by a music bed, no captions. |
 | images | none | none | 7 stills, Ken Burns motion, each an equal 1/7th of a 30s timeline, fully silent, no captions. |
-| clips | full | narration | 4 Kling 2.5 clips, stitched, a voiced script, word-synced captions. |
-| clips | none | music | 4 Kling 2.5 clips, stitched, scored by a music bed, no captions — closest to a Maximal-Nostalgia-style format. |
-| clips | none | none | 4 Kling 2.5 clips, stitched, fully silent, no captions. |
+| clips | full | narration | 4 Gemini Omni Flash clips, stitched, a voiced script, word-synced captions — each clip's own generated audio is stripped so it doesn't clash with the narration. |
+| clips | none | clip | 4 Gemini Omni Flash clips, stitched, each clip's own native generated audio (dialogue, SFX) kept as the soundtrack, no captions. |
+| clips | none | clip+music | 4 Gemini Omni Flash clips, stitched, native clip audio with a ducked music bed mixed in underneath, no captions. |
 
 narration == "full" images shorts keep script-driven timing — the equal 30s
 split only applies to narration == "none", where there's no audio to derive
 beat lengths from.
 
-Text is only ever burned in for narration == full. narration == none is
-silent-or-scored, never captioned — `audio` (set via `new_project.py --audio
-music|none`) picks which.
+Gemini Omni Flash generates synchronized audio (dialogue, SFX, music) natively
+with every clip — it's not a togglable setting, so write what's said directly
+into each beat's prompt (e.g. `... a woman says: "line of dialogue"`) rather
+than planning for a separate voice-over pass.
+
+Text is only ever burned in for narration == full. narration == none never
+burns captions — `audio` (set via `new_project.py --audio music|none`) picks
+the soundtrack: silent-or-scored for images, clip-audio-only-or-plus-music
+for clips.

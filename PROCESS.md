@@ -9,7 +9,7 @@ fixed stages:
 3. Script, only if narration is wanted (30-45s average)
 4. Descript SRT, only if there's a script
 5. Scene plan, from the topic or the script
-6. Beat batch: 4 motion clips (Kling 2.5) or 7 still images (Nano Banana 2)
+6. Beat batch: 4 motion clips (Gemini Omni Flash) or 7 still images (Nano Banana 2)
 7. Stitch
 8. Description
 9. Deliver — no thumbnail, no highlight clips
@@ -34,9 +34,9 @@ unchanged:
 | images | full | (narration track) | 7 stills, Ken Burns motion, a voiced script under it, word-synced captions. Timing comes from the narration, not an equal split. |
 | images | none | music | 7 stills, Ken Burns motion, each an equal 1/7th of a fixed 30s timeline, scored by a music bed, no captions. |
 | images | none | none | 7 stills, Ken Burns motion, each an equal 1/7th of a fixed 30s timeline, fully silent, no captions. |
-| clips | full | (narration track) | 4 Kling clips, stitched, a voiced script under it, word-synced captions. |
-| clips | none | music | 4 Kling clips, stitched, scored by a music bed, no captions — closest to Maximal Nostalgia's format. |
-| clips | none | none | 4 Kling clips, stitched, fully silent, no captions. |
+| clips | full | (narration track) | 4 Gemini Omni Flash clips, stitched, a voiced script under it, word-synced captions. Each clip's own generated audio is stripped so it can't clash with the narration. |
+| clips | none | clip | 4 Gemini Omni Flash clips, stitched, each clip's own generated audio (dialogue, SFX) kept as the soundtrack, no captions. |
+| clips | none | clip+music | 4 Gemini Omni Flash clips, stitched, native clip audio with a ducked `audio/music.*` bed mixed in underneath, no captions. |
 
 asset_mode and narration are both set once, in `new_project.py`, and read by
 every later stage. `audio` is set the same way, but only matters for
@@ -44,11 +44,19 @@ narration == none — a narration == full project's only audio is its
 narration track. Nothing branches on a command-line flag past that point.
 
 **No narration means no burned text, full stop.** The old "beat-labeled
-captions over music" behaviour is gone — narration == none produces a
-silent-or-scored video with nothing burned into the frame. Beat labels in
-`beats.json` are still required (they're how the topic gets broken into its
-four or seven specific moments, depending on asset_mode), they're just never
-rendered.
+captions over music" behaviour is gone — narration == none produces a video
+with nothing burned into the frame, scored by whatever `audio` picks. Beat
+labels in `beats.json` are still required (they're how the topic gets broken
+into its four or seven specific moments, depending on asset_mode), they're
+just never rendered.
+
+**asset_mode == "clips" generates its own audio — write the dialogue into
+the prompt.** Gemini Omni Flash produces synchronized audio (dialogue, SFX,
+music) with every clip; it isn't a togglable setting. There's no separate
+voice-over stage for clips + no narration — if a beat needs someone talking,
+say what they say directly in that beat's prompt (e.g. `a woman turns to
+camera and says: "line of dialogue"`), the same way the visual style block
+gets appended to every beat prompt.
 
 **asset_mode == "images", narration == "none" beats are equal-length, not
 editorial.** `IMAGES_TOTAL_DURATION_SEC` (30s) split evenly across
@@ -70,6 +78,9 @@ python3 preflight.py                                     # FIRST. Always.
 python3 new_project.py <slug> --asset-mode images|clips --narration full|none \
     --niche "nostalgia" --topic "..."
 # narration == none only: also set the soundtrack
+# images: music|none. clips (Gemini Omni Flash, native audio): music means
+# "clip audio + a ducked music bed", none means "clip audio only" - never
+# literal silence, the clips generate their own audio regardless.
 python3 new_project.py <slug> --audio music|none
 
 # ---- narration == full ----
@@ -136,20 +147,31 @@ always false.** Unchanged from the parent pipeline's image settings except
 the aspect ratio — 9:16 native instead of 16:9, since this pipeline never
 crops or letterboxes downstream.
 
-**Clips: OpenArt Kling 2.5, quality mode, 5 seconds, audio off, 9:16.** Audio
-off because the clip's own generated audio is never used — this pipeline's
-narration or music track is the only audio in the final output. A beat
-shorter than 5s trims the clip; a beat longer loops it
-(`-stream_loop -1 -t <beat_dur>`). Clips never get Ken Burns — motion is
-already baked into the source.
+**Clips: OpenArt Gemini Omni Flash, text2video, 4 seconds, 9:16, native audio
+always on.** Verified against `openart_model_list`/`openart_model_cost`
+directly — there's no "Veo" model in OpenArt's catalog; this is the closest
+available Google option, and its audio (dialogue/SFX/music, synchronized to
+the clip) isn't a parameter to set, it's inherent to every generation. No
+resolution or quality-tier control is exposed for this model. A beat shorter
+than 4s trims the clip; a beat longer loops it (`-stream_loop -1 -t
+<beat_dur>`) — audio loops right along with the video, so keep dialogue
+beats close to 4s rather than stretching them. Clips never get Ken Burns —
+motion is already baked into the source. `narration == "full"` still strips
+each clip's own audio at assembly time so it can't clash with the read
+narration track; only `narration == "none"` keeps it.
+If Gemini's dialogue quality isn't good enough, OpenArt's own model
+description names `byte-plus-seedance-2` ("Seedance 2.0") as "the pick for
+video with a spoken voice" — 720p, real duration/quality control, more
+expensive per clip. Swap `VIDEO_MODEL`/`VIDEO_MODE` in `config.py` and
+re-verify params with `openart_model_form_get` before the next run.
 
 **Output: 1080x1920 native, no letterbox/crop step.** Generated vertical from
 the first frame at both `IMAGE_ASPECT`/`VIDEO_ASPECT` — nothing to reframe
 downstream, and no separate long-form master to cut Shorts out of afterward.
 
 **Duration: floor 15s (WARN), soft max 90s (WARN), hard max 180s (FAIL).**
-The hard max is YouTube's actual Shorts technical cap. 4 clips at 5s each is
-20s if played straight with no narration to stretch the beats — comfortably
+The hard max is YouTube's actual Shorts technical cap. 4 clips at 4s each is
+16s if played straight with no narration to stretch the beats — comfortably
 inside the floor.
 
 **Captions: word-synced, narration == full only.** Full narration burns
@@ -159,11 +181,18 @@ cards, no text of any kind. `beats.json` labels exist for planning and the
 description stage only.
 
 **Audio (narration == none): `music` or `none`, set on `project.json`.**
-`music` loops/trims `audio/music.*` to the total beat duration at -23 LUFS —
-this pipeline doesn't generate or license music, so a file has to be placed
-there before `assemble.py` will run. `none` produces a video with no audio
-stream at all. `assemble.py` refuses to run for a narration == none project
-until `audio` is set to one or the other.
+`assemble.py` refuses to run for a narration == none project until `audio`
+is set to one or the other. Meaning depends on asset_mode:
+- **images** (no native audio source): `music` loops/trims `audio/music.*`
+  to the total beat duration at -23 LUFS — this pipeline doesn't generate or
+  license music, so a file has to be placed there before `assemble.py` will
+  run. `none` produces a video with no audio stream at all.
+- **clips** (Gemini Omni Flash, native audio): the clips' own generated
+  audio is always the primary track, mixed to -14 LUFS true peak -1.5 dB.
+  `music` additionally mixes in `audio/music.*`, ducked to -30 LUFS
+  underneath it (`MUSIC_DUCK_LUFS`, quieter than the images-mode bed level
+  since it sits under dialogue, not in place of it). `none` is clip audio
+  only — never literal silence, since the clips generate audio regardless.
 
 **Volume (narration == full): -14 LUFS, true peak -1.5 dB** — unchanged from
 the parent pipeline, because the physics of what sounds right on a phone

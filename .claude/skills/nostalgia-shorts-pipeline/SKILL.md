@@ -5,7 +5,8 @@ description: >
   selection, mode selection (still images or motion clips, voiced or
   unvoiced), script (if voiced), narration audio, aligned SRT (if voiced),
   scene plan, visual style, beat batch (7 images via Nano Banana 2, or 4
-  clips via Kling 2.5), assembly, and description. No thumbnail, no
+  clips via Gemini Omni Flash with native audio), assembly, and description.
+  No thumbnail, no
   highlight-clip stage - the Short itself is the only deliverable. Use when
   the user wants to make a new nostalgia (or other niche) Short, resume an
   interrupted one, or run any single stage. Trigger on "new short", "make a
@@ -53,9 +54,12 @@ pipeline doesn't produce either.
    not a single event), wait for the pick. Then ask for asset_mode
    (images/clips) and narration (full/none) and write both immediately:
    `new_project.py <slug> --asset-mode images|clips --narration full|none --niche "..." --topic "..."`
-   If narration == "none", also ask whether the soundtrack should be a music
-   bed or fully silent, and write it immediately too:
-   `new_project.py <slug> --audio music|none`
+   If narration == "none", also ask about the soundtrack and write it
+   immediately: `new_project.py <slug> --audio music|none`. asset_mode ==
+   "images": music bed or fully silent. asset_mode == "clips" (Gemini Omni
+   Flash generates its own audio with every clip, always): "music" mixes a
+   ducked bed in underneath the clips' own audio, "none" is clip audio alone
+   - never literal silence.
    Propose three to five titles off the chosen topic and save one before
    moving on - don't defer this to the description stage.
 3. **Script — narration == "full" only.** `playbooks/02_script.md`. 80-115
@@ -88,7 +92,9 @@ pipeline doesn't produce either.
      an equal 1/7th of a fixed 30s timeline (`scene_plan.py beats` computes
      it and ignores any `"dur"` you write), so don't propose per-beat
      durations to the user, only labels. asset_mode == "clips": still state
-     `{"label": "...", "dur": ...}` per entry by hand, same as before.
+     `{"label": "...", "dur": ...}` per entry by hand, same as before - keep
+     durations close to 4s (`VIDEO_CLIP_SEC`) for any beat that needs
+     dialogue, since a loop repeats the line and a trim can cut it off.
      Labels are planning/description material only - narration == "none"
      never burns text into the video, so don't present them to the user as
      captions-to-be. Then `python3 scene_plan.py beats ../projects/<slug>`.
@@ -102,7 +108,11 @@ pipeline doesn't produce either.
    album cover, or trademarked logo; describe the era and scene instead.
 7. **Beat 1, then the batch.** Generate beat 1 alone at locked settings -
    `nano-banana-2 | text2image | 2K | 9:16` for images,
-   `Kling 2.5 | quality mode | 5s | audio off | 9:16` for clips. Show it,
+   `gemini-omni-flash | text2video | 4s | 9:16` for clips (native audio,
+   always on - not a parameter). For clips + narration == "none", write the
+   spoken line directly into the beat's prompt (e.g. `...says: "line"`) if
+   that beat needs dialogue; for narration == "full" clips, don't - the
+   clip's own audio gets stripped at assembly so it never plays. Show beat 1,
    wait for approval (gate 2), then write `prompts.json` mapping beat number
    to prompt and run the batch to completion, autonomously:
    `manifest.py init / next / submit / record / fetch / verify / status`,
@@ -112,9 +122,13 @@ pipeline doesn't produce either.
    automatically on `project.json`'s asset_mode/narration/audio - Ken Burns
    stills or trimmed/looped clips; word-synced captions from
    `out/captions.srt` for narration == "full", no burned text at all for
-   narration == "none"; narration audio, a music bed, or no audio track
-   depending on `audio`. Refuses to run for a narration == "none" project
-   until `audio` is set. Nothing to choose here beyond running it.
+   narration == "none". Audio source: narration == "full" uses the narration
+   track (clips' own audio stripped); narration == "none" + images uses
+   `audio` (music bed or none) alone; narration == "none" + clips keeps each
+   clip's own generated audio as the primary track and only uses `audio` to
+   decide whether a ducked music bed is mixed in underneath it. Refuses to
+   run for a narration == "none" project until `audio` is set. Nothing to
+   choose here beyond running it.
 9. **Description, then deliver.** `playbooks/04_description.md`. Use
    `prompts/description_prompt.txt`, base it on the script (if any) or the
    beat labels, then `description_check.py`. Once it passes:
