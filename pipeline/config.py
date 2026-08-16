@@ -58,7 +58,8 @@ CLIPS_PER_SHORT = 4
 # "full" images shorts are unaffected — their timing still comes from the
 # actual narration length, and asset_mode == "clips" still states "dur" per
 # beat by hand.
-IMAGES_TOTAL_DURATION_SEC = 30.0
+# 28.0 / 7 = 4.0s per beat, matching the clips path's 4s-per-beat pacing.
+IMAGES_TOTAL_DURATION_SEC = 28.0
 
 # ---------- script (narration == "full" only) ----------
 # Averages 30-45s of narration at a brisk pace (~2.5-2.6 words/sec measured

@@ -21,9 +21,8 @@ from, so this is where the topic actually gets broken into its four or seven
 specific moments (not "1990s mall culture" as one vague beat repeated, but
 distinct, specific scenes within it: the food court, the record store, the
 arcade, the exit). asset_mode == images is length-free here — every beat is
-an equal 1/7th of a fixed 30s timeline regardless of what `beats.json` says
-about duration — so the only decision is which seven moments to show and in
-what order.
+a fixed 4s (28s total) regardless of what `beats.json` says about duration —
+so the only decision is which seven moments to show and in what order.
 
 ## 2. Original art only — never a reproduction
 
@@ -88,8 +87,8 @@ model nano-banana-2 | text2image | 2K | 9:16 | count 1 | autoEnhancePrompt false
 ```
 `autoEnhancePrompt` must stay false — it rewrites the style block and subjects
 drift across beats. Exactly 7 beats this way, each held for its scene-plan
-duration with Ken Burns motion (narration == none: an equal 1/7th of 30s
-each; narration == full: whatever the narration-driven split gives it).
+duration with Ken Burns motion (narration == none: a fixed 4s each, 28s
+total; narration == full: whatever the narration-driven split gives it).
 
 **asset_mode == clips** — OpenArt Gemini Omni Flash:
 ```

@@ -89,9 +89,9 @@ pipeline doesn't produce either.
      or 4 (clips) entries - this is where the topic actually becomes four or
      seven specific moments, not one vague beat repeated. asset_mode ==
      "images": each entry only needs `{"label": "..."}` - duration is always
-     an equal 1/7th of a fixed 30s timeline (`scene_plan.py beats` computes
-     it and ignores any `"dur"` you write), so don't propose per-beat
-     durations to the user, only labels. asset_mode == "clips": still state
+     a fixed 4s (28s total; `scene_plan.py beats` computes it and ignores any
+     `"dur"` you write), so don't propose per-beat durations to the user,
+     only labels. asset_mode == "clips": still state
      `{"label": "...", "dur": ...}` per entry by hand, same as before - keep
      durations close to 4s (`VIDEO_CLIP_SEC`) for any beat that needs
      dialogue, since a loop repeats the line and a trim can cut it off.

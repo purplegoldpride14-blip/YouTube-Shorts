@@ -32,8 +32,8 @@ unchanged:
 | asset_mode | narration | audio | What it is |
 |---|---|---|---|
 | images | full | (narration track) | 7 stills, Ken Burns motion, a voiced script under it, word-synced captions. Timing comes from the narration, not an equal split. |
-| images | none | music | 7 stills, Ken Burns motion, each an equal 1/7th of a fixed 30s timeline, scored by a music bed, no captions. |
-| images | none | none | 7 stills, Ken Burns motion, each an equal 1/7th of a fixed 30s timeline, fully silent, no captions. |
+| images | none | music | 7 stills, Ken Burns motion, 4s each (28s total), scored by a music bed, no captions. |
+| images | none | none | 7 stills, Ken Burns motion, 4s each (28s total), fully silent, no captions. |
 | clips | full | (narration track) | 4 Gemini Omni Flash clips, stitched, a voiced script under it, word-synced captions. Each clip's own generated audio is stripped so it can't clash with the narration. |
 | clips | none | clip | 4 Gemini Omni Flash clips, stitched, each clip's own generated audio (dialogue, SFX) kept as the soundtrack, no captions. |
 | clips | none | clip+music | 4 Gemini Omni Flash clips, stitched, native clip audio with a ducked `audio/music.*` bed mixed in underneath, no captions. |
@@ -59,14 +59,15 @@ camera and says: "line of dialogue"`), the same way the visual style block
 gets appended to every beat prompt.
 
 **asset_mode == "images", narration == "none" beats are equal-length, not
-editorial.** `IMAGES_TOTAL_DURATION_SEC` (30s) split evenly across
-`IMAGES_PER_SHORT` (7) beats — `scene_plan.py beats` computes each beat's
+editorial.** `IMAGES_TOTAL_DURATION_SEC` (28s) split evenly across
+`IMAGES_PER_SHORT` (7) beats — 4s per beat, matching the clips path's 4s
+(`VIDEO_CLIP_SEC`) pacing. `scene_plan.py beats` computes each beat's
 duration itself and ignores any `"dur"` in `beats.json`, so the only
 editorial call left there is each beat's label. This is unique to images +
 no narration: `asset_mode == "clips"` beats still state their own `"dur"` by
 hand (a clip's natural length varies more than a still's), and
 `narration == "full"` images shorts still take their timing from the actual
-narration length, not this fixed 30s split.
+narration length, not this fixed 28s split.
 
 ---
 
@@ -95,7 +96,7 @@ python3 scene_plan.py build   ../projects/<slug>
 
 # ---- narration == none ----
 # write out/beats.json by hand: exactly 7 (images) or 4 (clips) entries.
-# images: [{"label": "..."}, ...] — duration is always an equal 1/7th of 30s,
+# images: [{"label": "..."}, ...] — duration is always a fixed 4s (28s total),
 #         "dur" is ignored if present. Labels are bookkeeping only, never burned.
 # clips:  [{"label": "...", "dur": ...}, ...] — "dur" still hand-stated.
 python3 scene_plan.py beats ../projects/<slug>

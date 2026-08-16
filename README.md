@@ -66,15 +66,15 @@ deliverable.
 | asset_mode | narration | audio | What it is |
 |---|---|---|---|
 | images | full | narration | 7 Nano-Banana-2 stills, Ken Burns motion, a voiced script, word-synced captions. |
-| images | none | music | 7 stills, Ken Burns motion, each an equal 1/7th of a 30s timeline, scored by a music bed, no captions. |
-| images | none | none | 7 stills, Ken Burns motion, each an equal 1/7th of a 30s timeline, fully silent, no captions. |
+| images | none | music | 7 stills, Ken Burns motion, 4s each (28s total), scored by a music bed, no captions. |
+| images | none | none | 7 stills, Ken Burns motion, 4s each (28s total), fully silent, no captions. |
 | clips | full | narration | 4 Gemini Omni Flash clips, stitched, a voiced script, word-synced captions — each clip's own generated audio is stripped so it doesn't clash with the narration. |
 | clips | none | clip | 4 Gemini Omni Flash clips, stitched, each clip's own native generated audio (dialogue, SFX) kept as the soundtrack, no captions. |
 | clips | none | clip+music | 4 Gemini Omni Flash clips, stitched, native clip audio with a ducked music bed mixed in underneath, no captions. |
 
-narration == "full" images shorts keep script-driven timing — the equal 30s
-split only applies to narration == "none", where there's no audio to derive
-beat lengths from.
+narration == "full" images shorts keep script-driven timing — the equal
+28s/4s-per-beat split only applies to narration == "none", where there's no
+audio to derive beat lengths from.
 
 Gemini Omni Flash generates synchronized audio (dialogue, SFX, music) natively
 with every clip — it's not a togglable setting, so write what's said directly
