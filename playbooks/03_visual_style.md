@@ -65,8 +65,11 @@ Always close with:
 }
 ```
 
-End the style block with `no text anywhere in the image` — captions/beat
-labels are burned in later by `assemble.py`, not baked into the asset.
+End the style block with `no text anywhere in the image` — for narration ==
+"full", word-synced captions are burned in later by `assemble.py` as a
+separate overlay, not baked into the asset. For narration == "none",
+`assemble.py` burns no text at all, so there's even less reason for the
+generated asset to carry any.
 
 ## 5. Lock the style on beat 1
 

@@ -4,12 +4,20 @@ Scaffold a project folder, or update an existing project's metadata.
 
 Usage:
     python3 new_project.py <slug> --asset-mode images|clips --narration full|none
+                            [--audio music|none]
                             [--niche "..."] [--topic "..."] [--title "..."] [--no-hashtags]
 
 Creates ../projects/<slug>/ with audio/ srt/ frames/ out/ and a project.json that
-carries the niche, topic, title, asset_mode and narration choice forward through
-every later stage. Safe to re-run on an existing slug: any flag you pass
-overwrites that field in project.json, everything else is left as-is.
+carries the niche, topic, title, asset_mode, narration and audio choice forward
+through every later stage. Safe to re-run on an existing slug: any flag you
+pass overwrites that field in project.json, everything else is left as-is.
+
+--audio only applies to narration == "none" projects (a "full" project's
+audio is always its narration track, so this flag is ignored there). Pick
+"music" for the beat count's usual music-bed treatment (drop a file in
+audio/music.* before assemble.py), or "none" for a silent video with no
+audio track at all. assemble.py refuses to run for a narration == "none"
+project until this is set.
 
 niche defaults to nothing in particular — this pipeline is built around
 nostalgia content but isn't locked to it; the niche stage (playbook 01)
@@ -27,7 +35,7 @@ import json
 import argparse
 from datetime import date
 
-from config import VALID_ASSET_MODES, VALID_NARRATION
+from config import VALID_ASSET_MODES, VALID_NARRATION, VALID_AUDIO
 
 
 def main():
@@ -36,6 +44,8 @@ def main():
     ap.add_argument("slug")
     ap.add_argument("--asset-mode", choices=VALID_ASSET_MODES, default=None)
     ap.add_argument("--narration", choices=VALID_NARRATION, default=None)
+    ap.add_argument("--audio", choices=VALID_AUDIO, default=None,
+                    help="narration == none only: 'music' (bed under the visuals) or 'none' (silent)")
     ap.add_argument("--niche", default=None, help="e.g. 'nostalgia' (the likely default), or anything else")
     ap.add_argument("--topic", default=None, help="the specific angle — a decade, city, subculture, trend")
     ap.add_argument("--title", default=None)
@@ -57,6 +67,7 @@ def main():
             "created": str(date.today()),
             "asset_mode": None,
             "narration": None,
+            "audio": None,
             "niche": "",
             "topic": "",
             "title": "",
@@ -68,6 +79,8 @@ def main():
         meta["asset_mode"] = a.asset_mode
     if a.narration is not None:
         meta["narration"] = a.narration
+    if a.audio is not None:
+        meta["audio"] = a.audio
     if a.niche is not None:
         meta["niche"] = a.niche
     if a.topic is not None:
@@ -90,12 +103,16 @@ def main():
 
     if not meta["asset_mode"] or not meta["narration"]:
         print("\nWARN: asset_mode and/or narration not set yet — set both before scene planning.")
+    if meta["narration"] == "none" and not meta.get("audio"):
+        print("\nWARN: audio not set yet — set --audio music|none before assemble.py will run.")
 
     print("\nNext:")
     if meta["narration"] == "full":
         print(f"    write the script, then script_check.py <script.txt> {root} --fix")
     else:
         print(f"    write out/beats.json directly (no script stage for narration=none)")
+        if meta.get("audio") == "music":
+            print(f"    and drop a music bed into {root}/audio/music.<ext>")
     return 0
 
 

@@ -29,15 +29,25 @@ unchanged:
 
 ## The four combinations
 
-| asset_mode | narration | What it is |
-|---|---|---|
-| images | full | 5 stills, Ken Burns motion, a voiced script under it. |
-| images | none | 5 stills, Ken Burns motion, text beats over music. |
-| clips | full | 4 Kling clips, stitched, a voiced script under it. |
-| clips | none | 4 Kling clips, stitched, text beats over music — closest to Maximal Nostalgia's format. |
+| asset_mode | narration | audio | What it is |
+|---|---|---|---|
+| images | full | (narration track) | 5 stills, Ken Burns motion, a voiced script under it, word-synced captions. |
+| images | none | music | 5 stills, Ken Burns motion, silent — no captions, no beat labels — scored by a music bed. |
+| images | none | none | 5 stills, Ken Burns motion, fully silent, no captions. |
+| clips | full | (narration track) | 4 Kling clips, stitched, a voiced script under it, word-synced captions. |
+| clips | none | music | 4 Kling clips, stitched, scored by a music bed, no captions — closest to Maximal Nostalgia's format. |
+| clips | none | none | 4 Kling clips, stitched, fully silent, no captions. |
 
 asset_mode and narration are both set once, in `new_project.py`, and read by
-every later stage. Nothing branches on a command-line flag past that point.
+every later stage. `audio` is set the same way, but only matters for
+narration == none — a narration == full project's only audio is its
+narration track. Nothing branches on a command-line flag past that point.
+
+**No narration means no burned text, full stop.** The old "beat-labeled
+captions over music" behaviour is gone — narration == none produces a
+silent-or-scored video with nothing burned into the frame. Beat labels in
+`beats.json` are still required (they're how the topic gets broken into its
+four or five specific moments), they're just never rendered.
 
 ---
 
@@ -48,6 +58,8 @@ cd pipeline
 python3 preflight.py                                     # FIRST. Always.
 python3 new_project.py <slug> --asset-mode images|clips --narration full|none \
     --niche "nostalgia" --topic "..."
+# narration == none only: also set the soundtrack
+python3 new_project.py <slug> --audio music|none
 
 # ---- narration == full ----
 # after writing script.txt
@@ -61,9 +73,10 @@ python3 scene_plan.py build   ../projects/<slug>
 
 # ---- narration == none ----
 # write out/beats.json by hand: exactly 5 (images) or 4 (clips) entries,
-# [{"label": "...", "dur": ...}, ...]
+# [{"label": "...", "dur": ...}, ...] — labels are bookkeeping only, never burned
 python3 scene_plan.py beats ../projects/<slug>
-# drop a music bed into projects/<slug>/audio/music.<ext>
+# if audio == music: drop a music bed into projects/<slug>/audio/music.<ext>
+# if audio == none: nothing to do here, assemble.py produces a silent video
 
 # ---- both paths converge here ----
 python3 manifest.py init   ../projects/<slug>
@@ -126,14 +139,18 @@ The hard max is YouTube's actual Shorts technical cap. 4 clips at 5s each is
 20s if played straight with no narration to stretch the beats — comfortably
 inside the floor.
 
-**Captions: word-synced (narration == full) or beat-labeled (narration ==
-none).** Full narration burns `out/captions.srt`, aligned the same way the
-parent pipeline does it. No narration burns each beat's own label from
-`beats.json` as a title card for that beat's exact window.
+**Captions: word-synced, narration == full only.** Full narration burns
+`out/captions.srt`, aligned the same way the parent pipeline does it.
+narration == none burns nothing — no word captions, no beat-labeled title
+cards, no text of any kind. `beats.json` labels exist for planning and the
+description stage only.
 
-**Music bed: -23 LUFS, looped/trimmed to the total beat duration.** Read from
-`audio/music.*` — this pipeline doesn't generate or license music, so a file
-has to be placed there before `assemble.py` will run for narration == none.
+**Audio (narration == none): `music` or `none`, set on `project.json`.**
+`music` loops/trims `audio/music.*` to the total beat duration at -23 LUFS —
+this pipeline doesn't generate or license music, so a file has to be placed
+there before `assemble.py` will run. `none` produces a video with no audio
+stream at all. `assemble.py` refuses to run for a narration == none project
+until `audio` is set to one or the other.
 
 **Volume (narration == full): -14 LUFS, true peak -1.5 dB** — unchanged from
 the parent pipeline, because the physics of what sounds right on a phone

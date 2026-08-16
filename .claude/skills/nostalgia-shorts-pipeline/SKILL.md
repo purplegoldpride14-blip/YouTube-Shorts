@@ -53,6 +53,9 @@ pipeline doesn't produce either.
    not a single event), wait for the pick. Then ask for asset_mode
    (images/clips) and narration (full/none) and write both immediately:
    `new_project.py <slug> --asset-mode images|clips --narration full|none --niche "..." --topic "..."`
+   If narration == "none", also ask whether the soundtrack should be a music
+   bed or fully silent, and write it immediately too:
+   `new_project.py <slug> --audio music|none`
    Propose three to five titles off the chosen topic and save one before
    moving on - don't defer this to the description stage.
 3. **Script — narration == "full" only.** `playbooks/02_script.md`. 80-115
@@ -79,9 +82,13 @@ pipeline doesn't produce either.
    - narration == "none": write `out/beats.json` by hand, exactly 5 or 4
      entries, `[{"label": "...", "dur": ...}, ...]` - this is where the topic
      actually becomes four or five specific moments, not one vague beat
-     repeated. Then `python3 scene_plan.py beats ../projects/<slug>`.
-     Also drop a music bed into `projects/<slug>/audio/music.<ext>` before
-     assembly - this pipeline doesn't generate or license music itself.
+     repeated. Labels are planning/description material only - narration ==
+     "none" never burns text into the video, so don't present them to the
+     user as captions-to-be. Then `python3 scene_plan.py beats ../projects/<slug>`.
+     If `audio` was set to "music", also drop a bed into
+     `projects/<slug>/audio/music.<ext>` before assembly - this pipeline
+     doesn't generate or license music itself. If `audio` is "none", nothing
+     to do here.
 6. **Style.** `playbooks/03_visual_style.md`. Offer options, accept a
    write-in or reference images, write `style.json`. Original art only -
    never instruct the model to reproduce a specific real photo, film frame,
@@ -95,10 +102,12 @@ pipeline doesn't produce either.
    in a loop, until `status` says all done. Never hold batch state in
    context - `status` is the source of truth.
 8. **Assemble.** `python3 assemble.py ../projects/<slug>`. Branches
-   automatically on `project.json`'s asset_mode/narration - Ken Burns stills
-   or trimmed/looped clips, word-synced captions from `out/captions.srt` or
-   beat-labeled captions from the beat text, narration audio or the music bed.
-   Nothing to choose here beyond running it.
+   automatically on `project.json`'s asset_mode/narration/audio - Ken Burns
+   stills or trimmed/looped clips; word-synced captions from
+   `out/captions.srt` for narration == "full", no burned text at all for
+   narration == "none"; narration audio, a music bed, or no audio track
+   depending on `audio`. Refuses to run for a narration == "none" project
+   until `audio` is set. Nothing to choose here beyond running it.
 9. **Description, then deliver.** `playbooks/04_description.md`. Use
    `prompts/description_prompt.txt`, base it on the script (if any) or the
    beat labels, then `description_check.py`. Once it passes:

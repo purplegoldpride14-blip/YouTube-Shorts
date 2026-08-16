@@ -14,6 +14,7 @@ cd pipeline
 python3 preflight.py                       # always first; installs ffmpeg if needed
 python3 new_project.py my-first-short --asset-mode clips --narration none \
     --niche "nostalgia" --topic "90s mall culture"
+python3 new_project.py my-first-short --audio music   # or --audio none for a silent short
 ```
 
 Then follow the skill. It runs nine stages with two approval gates: you pick
@@ -60,11 +61,17 @@ No pip installs. Everything in `pipeline/` is stdlib.
 No thumbnail stage, no highlight-clip stage — the Short itself is the only
 deliverable.
 
-## The four combinations
+## The combinations
 
-| asset_mode | narration | What it is |
-|---|---|---|
-| images | full | 5 Nano-Banana-2 stills, Ken Burns motion, a voiced script. |
-| images | none | 5 stills, Ken Burns motion, text beats over music. |
-| clips | full | 4 Kling 2.5 clips, stitched, a voiced script. |
-| clips | none | 4 Kling 2.5 clips, stitched, text over music — closest to a Maximal-Nostalgia-style format. |
+| asset_mode | narration | audio | What it is |
+|---|---|---|---|
+| images | full | narration | 5 Nano-Banana-2 stills, Ken Burns motion, a voiced script, word-synced captions. |
+| images | none | music | 5 stills, Ken Burns motion, scored by a music bed, no captions. |
+| images | none | none | 5 stills, Ken Burns motion, fully silent, no captions. |
+| clips | full | narration | 4 Kling 2.5 clips, stitched, a voiced script, word-synced captions. |
+| clips | none | music | 4 Kling 2.5 clips, stitched, scored by a music bed, no captions — closest to a Maximal-Nostalgia-style format. |
+| clips | none | none | 4 Kling 2.5 clips, stitched, fully silent, no captions. |
+
+Text is only ever burned in for narration == full. narration == none is
+silent-or-scored, never captioned — `audio` (set via `new_project.py --audio
+music|none`) picks which.

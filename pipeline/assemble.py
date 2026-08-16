@@ -16,11 +16,13 @@ declared mode partway through a run:
   narration == "full"      out/merged.wav is the track, out/captions.srt is
                             burned in as word-synced captions (same audio path
                             as the parent pipeline).
-  narration == "none"      audio/music.* is looped/trimmed to the total beat
-                            duration and normalised to a bed level, and each
-                            beat's own label (from beats.json, carried into
-                            scenes.json) is burned in as a beat-timed title
-                            card instead of word-level captions.
+  narration == "none"      no narration means no burned text of any kind -
+                            beat labels are bookkeeping only, never rendered
+                            into the video. project.json's "audio" field
+                            picks the soundtrack: "music" loops/trims
+                            audio/music.* to the total beat duration and
+                            normalises it to a bed level; "none" produces a
+                            silent video with no audio track at all.
 
 Every beat is held for exactly its beat duration, so cuts land on the audio by
 construction. The timeline is checked before a single frame is encoded.
@@ -41,7 +43,8 @@ from concurrent.futures import ThreadPoolExecutor
 from config import (OUT_WIDTH, OUT_HEIGHT, OUT_FPS, VIDEO_CRF, VIDEO_PRESET,
                     TARGET_LUFS, TARGET_TP, TARGET_LRA, MOTION_DEFAULT,
                     KENBURNS_ZOOM, LOUDNESS_TOLERANCE, VIDEO_CLIP_SEC,
-                    MUSIC_BED_LUFS, FONT, FONT_SIZE, TEXT_SAFE_MARGIN_PX)
+                    MUSIC_BED_LUFS, FONT, FONT_SIZE, TEXT_SAFE_MARGIN_PX,
+                    VALID_AUDIO)
 
 TS_RE = re.compile(r"(\d\d):(\d\d):(\d\d),(\d\d\d)")
 
@@ -111,22 +114,6 @@ def write_ass_from_srt(srt_path, dest):
                                margin=TEXT_SAFE_MARGIN_PX)
     events = [f"Dialogue: 0,{fmt_ass_ts(s)},{fmt_ass_ts(e)},Default,,0,0,0,,{t}"
              for s, e, t in cues]
-    open(dest, "w", encoding="utf-8").write(header + "\n".join(events) + "\n")
-    return len(events)
-
-
-def write_ass_from_beats(scenes, dest):
-    """narration == 'none': burn each beat's own label as a title card for
-    exactly that beat's window, instead of word-synced captions."""
-    header = ASS_HEADER.format(w=OUT_WIDTH, h=OUT_HEIGHT, font=FONT, size=FONT_SIZE,
-                               margin=TEXT_SAFE_MARGIN_PX)
-    events = []
-    for s in scenes:
-        if not s.get("text"):
-            continue
-        text = s["text"].replace("{", "(").replace("}", ")")
-        events.append(f"Dialogue: 0,{fmt_ass_ts(s['start'])},{fmt_ass_ts(s['end'])},"
-                      f"Default,,0,0,0,,{text}")
     open(dest, "w", encoding="utf-8").write(header + "\n".join(events) + "\n")
     return len(events)
 
@@ -239,7 +226,10 @@ def main():
     total = sum(s["dur"] for s in scenes)
 
     # ---- audio + captions ----
-    ass_path = os.path.join(out_dir, "burned_captions.ass")
+    # narration == "full" is the only mode with anything to burn as text —
+    # narration == "none" means no voice-over AND no text of any kind, silent
+    # or scored purely by project.json's audio field.
+    burn = None
     if narration == "full":
         meta = json.load(open(os.path.join(out_dir, "audio_meta.json")))
         wav = os.path.join(out_dir, meta["merged_wav"])
@@ -250,7 +240,11 @@ def main():
         if drift > 0.05:
             print(f"FAIL: beat durations total {total:.3f}s vs audio {meta['duration_sec']:.3f}s")
             return 1
+        ass_path = os.path.join(out_dir, "burned_captions.ass")
         n_cues = write_ass_from_srt(os.path.join(out_dir, "captions.srt"), ass_path)
+        ass_escaped = ass_path.replace("\\", "\\\\").replace(":", "\\:").replace("'", "\\'")
+        burn = f"ass='{ass_escaped}'"
+        has_audio = True
         audio_dur = meta["duration_sec"]
         lufs = measure_lufs(wav)
         if lufs is not None:
@@ -259,22 +253,31 @@ def main():
             if off > LOUDNESS_TOLERANCE:
                 print(f"WARN: {off:.1f} dB from target. Re-run audio_merge.py.")
     else:
-        wav = prep_music_bed(a.project_dir, total)
-        n_cues = write_ass_from_beats(scenes, ass_path)
+        audio_choice = proj.get("audio")
+        if audio_choice not in VALID_AUDIO:
+            print(f"FAIL: project.json audio is {audio_choice!r}, must be 'music' or 'none' "
+                  f"(set with new_project.py --audio music|none)")
+            return 1
+        if audio_choice == "music":
+            wav = prep_music_bed(a.project_dir, total)
+            has_audio = True
+        else:
+            wav = None
+            has_audio = False
+        n_cues = 0
         audio_dur = total
 
     print(f"Beats present: {len(scenes)} | timeline {total:.2f}s | "
-          f"mode {asset_mode}/{narration} | motion {motion} | {n_cues} caption cue(s)")
+          f"mode {asset_mode}/{narration} | motion {motion} | "
+          f"audio {'music' if has_audio else 'none'} | {n_cues} caption cue(s)")
 
     # ---- visuals ----
     # Segments (clips, or images+kenburns) are already at final scale/fps, so
-    # their filter chain is just the caption burn. Stills (images, no motion)
-    # still need scale/crop/format, with the caption burn appended onto that
-    # same chain. Either way the final step re-encodes — burning captions
-    # rules out a video stream copy regardless of path.
-    ass_escaped = ass_path.replace("\\", "\\\\").replace(":", "\\:").replace("'", "\\'")
-    burn = f"ass='{ass_escaped}'"
-
+    # their filter chain is just the caption burn, if any. Stills (images, no
+    # motion) still need scale/crop/format, with the caption burn appended
+    # onto that same chain when present. Either way the final step
+    # re-encodes — burning captions rules out a video stream copy regardless
+    # of path.
     if asset_mode == "clips":
         seg_dir = tempfile.mkdtemp(prefix="segs_")
         print(f"Rendering {len(scenes)} clip segments with {a.jobs} workers...")
@@ -289,13 +292,21 @@ def main():
         listfile, vf = _segments_to_list(segs), burn
     else:
         listfile = build_still_list(scenes, frames_dir)
-        vf = (f"scale={OUT_WIDTH}:{OUT_HEIGHT}:force_original_aspect_ratio=increase,"
-              f"crop={OUT_WIDTH}:{OUT_HEIGHT},format=yuv420p,{burn}")
+        base = (f"scale={OUT_WIDTH}:{OUT_HEIGHT}:force_original_aspect_ratio=increase,"
+                f"crop={OUT_WIDTH}:{OUT_HEIGHT},format=yuv420p")
+        vf = f"{base},{burn}" if burn else base
 
-    cmd = ["ffmpeg", "-v", "error", "-y", "-f", "concat", "-safe", "0",
-           "-i", listfile, "-i", wav, "-vf", vf, "-r", str(OUT_FPS),
-           "-c:v", "libx264", "-crf", str(VIDEO_CRF), "-preset", VIDEO_PRESET,
-           "-c:a", "aac", "-b:a", "192k", "-shortest", "-movflags", "+faststart", out_path]
+    cmd = ["ffmpeg", "-v", "error", "-y", "-f", "concat", "-safe", "0", "-i", listfile]
+    if has_audio:
+        cmd += ["-i", wav]
+    if vf:
+        cmd += ["-vf", vf]
+    cmd += ["-r", str(OUT_FPS), "-c:v", "libx264", "-crf", str(VIDEO_CRF), "-preset", VIDEO_PRESET]
+    if has_audio:
+        cmd += ["-c:a", "aac", "-b:a", "192k", "-shortest"]
+    else:
+        cmd += ["-an"]
+    cmd += ["-movflags", "+faststart", out_path]
 
     print("Encoding...")
     run(cmd)
@@ -305,7 +316,8 @@ def main():
                      "-of", "csv=p=0", out_path]).stdout.strip())
     size = os.path.getsize(out_path) / 1e6
     print(f"\nOK  {out_path}")
-    print(f"    {dur:.2f}s | {size:.1f} MB | {OUT_WIDTH}x{OUT_HEIGHT} @ {OUT_FPS}fps")
+    print(f"    {dur:.2f}s | {size:.1f} MB | {OUT_WIDTH}x{OUT_HEIGHT} @ {OUT_FPS}fps"
+          f"{'' if has_audio else ' | silent'}")
     if abs(dur - audio_dur) > 0.5:
         print(f"WARN: output {dur:.2f}s vs planned {audio_dur:.2f}s")
     return 0

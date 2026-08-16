@@ -20,9 +20,15 @@ output IS the Short.
 #   narration: "full" | "none"
 #     full -> voiced script (30-45s average), TTS, burned captions from the
 #             transcript
-#     none -> no voice-over; burned beat labels over music
+#     none -> no voice-over, no burned text of any kind; silent or scored by
+#             the audio field below
+#   audio: "music" | "none" (narration == "none" projects only — a "full"
+#          project's audio is always its narration track)
+#     music -> audio/music.* looped/trimmed to a bed under the visuals
+#     none  -> no audio track in the output at all
 VALID_ASSET_MODES = ("images", "clips")
 VALID_NARRATION = ("full", "none")
+VALID_AUDIO = ("music", "none")
 
 # ---------- beat count ----------
 # Fixed per asset_mode, not derived from script length or novelty-detection —
