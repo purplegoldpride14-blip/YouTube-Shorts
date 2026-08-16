@@ -4,7 +4,7 @@ description: >
   Produce a standalone vertical YouTube Short end to end - niche and topic
   selection, mode selection (still images or motion clips, voiced or
   unvoiced), script (if voiced), narration audio, aligned SRT (if voiced),
-  scene plan, visual style, beat batch (5 images via Nano Banana 2, or 4
+  scene plan, visual style, beat batch (7 images via Nano Banana 2, or 4
   clips via Kling 2.5), assembly, and description. No thumbnail, no
   highlight-clip stage - the Short itself is the only deliverable. Use when
   the user wants to make a new nostalgia (or other niche) Short, resume an
@@ -78,13 +78,20 @@ pipeline doesn't produce either.
    - narration == "full": `python3 scene_plan.py propose ../projects/<slug>`,
      read `beats_draft.txt`, adjust `boundaries.json` if a cut lands badly,
      then `python3 scene_plan.py build ../projects/<slug>`. This always
-     produces exactly 5 (images) or 4 (clips) beats - never more, never fewer.
-   - narration == "none": write `out/beats.json` by hand, exactly 5 or 4
-     entries, `[{"label": "...", "dur": ...}, ...]` - this is where the topic
-     actually becomes four or five specific moments, not one vague beat
-     repeated. Labels are planning/description material only - narration ==
-     "none" never burns text into the video, so don't present them to the
-     user as captions-to-be. Then `python3 scene_plan.py beats ../projects/<slug>`.
+     produces exactly 7 (images) or 4 (clips) beats - never more, never fewer.
+     Timing still comes from the actual narration length here, not an equal
+     split.
+   - narration == "none": write `out/beats.json` by hand, exactly 7 (images)
+     or 4 (clips) entries - this is where the topic actually becomes four or
+     seven specific moments, not one vague beat repeated. asset_mode ==
+     "images": each entry only needs `{"label": "..."}` - duration is always
+     an equal 1/7th of a fixed 30s timeline (`scene_plan.py beats` computes
+     it and ignores any `"dur"` you write), so don't propose per-beat
+     durations to the user, only labels. asset_mode == "clips": still state
+     `{"label": "...", "dur": ...}` per entry by hand, same as before.
+     Labels are planning/description material only - narration == "none"
+     never burns text into the video, so don't present them to the user as
+     captions-to-be. Then `python3 scene_plan.py beats ../projects/<slug>`.
      If `audio` was set to "music", also drop a bed into
      `projects/<slug>/audio/music.<ext>` before assembly - this pipeline
      doesn't generate or license music itself. If `audio` is "none", nothing

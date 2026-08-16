@@ -35,8 +35,18 @@ VALID_AUDIO = ("music", "none")
 # every Short from this pipeline has exactly this many beats regardless of
 # how long the script is. A script that's louder in some places than others
 # still divides into this many beats; the timing bends, the count doesn't.
-IMAGES_PER_SHORT = 5
+IMAGES_PER_SHORT = 7
 CLIPS_PER_SHORT = 4
+
+# asset_mode == "images", narration == "none" only: beats are always
+# equal-length, IMAGES_TOTAL_DURATION_SEC split evenly across
+# IMAGES_PER_SHORT beats — scene_plan.py's "beats" command computes each
+# beat's duration from this rather than reading "dur" out of beats.json, so
+# the only editorial call left there is each beat's label. narration ==
+# "full" images shorts are unaffected — their timing still comes from the
+# actual narration length, and asset_mode == "clips" still states "dur" per
+# beat by hand.
+IMAGES_TOTAL_DURATION_SEC = 30.0
 
 # ---------- script (narration == "full" only) ----------
 # Averages 30-45s of narration at a brisk pace (~2.5-2.6 words/sec measured

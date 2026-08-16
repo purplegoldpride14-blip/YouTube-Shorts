@@ -68,14 +68,21 @@ This is the first of two approval gates. Wait for the answer.
 
 > How should this one be made?
 >
-> Visuals: 1. Still images (5 beats)   2. Motion clips (4 beats)
-> Voice-over: 1. Full script   2. None — text over music
+> Visuals: 1. Still images (7 beats, each an equal 1/7th of 30s)   2. Motion clips (4 beats)
+> Voice-over: 1. Full script   2. None — music bed or fully silent
 
 Write the answers, along with the chosen topic:
 
 ```bash
 python3 new_project.py <slug> --asset-mode images|clips --narration full|none \
     --niche "nostalgia" --topic "..."
+```
+
+If voice-over is "none", also ask whether the soundtrack should be a music
+bed or fully silent, and write it immediately too:
+
+```bash
+python3 new_project.py <slug> --audio music|none
 ```
 
 ## 4. Pick the title

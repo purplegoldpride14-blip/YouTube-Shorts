@@ -3,7 +3,7 @@
 ## 1. Scene plan
 
 Build the beat timing before locking style — the beat count is fixed by
-asset_mode (5 for images, 4 for clips), but *what's in* each beat is an
+asset_mode (7 for images, 4 for clips), but *what's in* each beat is an
 editorial call based on the topic (and the script, if there is one).
 
 ```bash
@@ -11,15 +11,19 @@ editorial call based on the topic (and the script, if there is one).
 python3 scene_plan.py propose ../projects/<slug>   # then read beats_draft.txt, adjust boundaries.json
 python3 scene_plan.py build   ../projects/<slug>
 
-# narration == none — write out/beats.json by hand first, exactly 5 or 4 entries
+# narration == none — write out/beats.json by hand first, exactly 7 (images) or 4 (clips) entries
 python3 scene_plan.py beats ../projects/<slug>
 ```
 
-For narration == none, deciding each beat's label and length *is* the scene
-plan — there's no transcript to derive it from, so this is where the topic
-actually gets broken into its four or five specific moments (not "1990s mall
-culture" as one vague beat repeated four times, but four distinct, specific
-scenes within it: the food court, the record store, the arcade, the exit).
+For narration == none, deciding each beat's label (and, for asset_mode ==
+clips, its length) *is* the scene plan — there's no transcript to derive it
+from, so this is where the topic actually gets broken into its four or seven
+specific moments (not "1990s mall culture" as one vague beat repeated, but
+distinct, specific scenes within it: the food court, the record store, the
+arcade, the exit). asset_mode == images is length-free here — every beat is
+an equal 1/7th of a fixed 30s timeline regardless of what `beats.json` says
+about duration — so the only decision is which seven moments to show and in
+what order.
 
 ## 2. Original art only — never a reproduction
 
@@ -81,8 +85,9 @@ asset_mode:
 model nano-banana-2 | text2image | 2K | 9:16 | count 1 | autoEnhancePrompt false
 ```
 `autoEnhancePrompt` must stay false — it rewrites the style block and subjects
-drift across beats. Exactly 5 beats this way, each held for its scene-plan
-duration with Ken Burns motion.
+drift across beats. Exactly 7 beats this way, each held for its scene-plan
+duration with Ken Burns motion (narration == none: an equal 1/7th of 30s
+each; narration == full: whatever the narration-driven split gives it).
 
 **asset_mode == clips** — OpenArt Kling 2.5:
 ```

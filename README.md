@@ -53,7 +53,7 @@ No pip installs. Everything in `pipeline/` is stdlib.
 | 4 | narration + SRT — narration == full only | `audio_merge.py` then `srt_build.py` |
 | 5 | scene plan | `scene_plan.py propose\|build` (full) or `scene_plan.py beats` (none) |
 | 6 | visual style | `playbooks/03_visual_style.md` |
-| 7 | beat batch: 5 images or 4 clips | `manifest.py init\|next\|submit\|record\|fetch\|verify\|status` |
+| 7 | beat batch: 7 images or 4 clips | `manifest.py init\|next\|submit\|record\|fetch\|verify\|status` |
 | 7 | assemble | `assemble.py ../projects/<slug>` |
 | 8 | description | `description_check.py ../projects/<slug>/description.md ../projects/<slug>/project.json` |
 | 9 | deliver | `deliver.py ../projects/<slug>` |
@@ -65,12 +65,16 @@ deliverable.
 
 | asset_mode | narration | audio | What it is |
 |---|---|---|---|
-| images | full | narration | 5 Nano-Banana-2 stills, Ken Burns motion, a voiced script, word-synced captions. |
-| images | none | music | 5 stills, Ken Burns motion, scored by a music bed, no captions. |
-| images | none | none | 5 stills, Ken Burns motion, fully silent, no captions. |
+| images | full | narration | 7 Nano-Banana-2 stills, Ken Burns motion, a voiced script, word-synced captions. |
+| images | none | music | 7 stills, Ken Burns motion, each an equal 1/7th of a 30s timeline, scored by a music bed, no captions. |
+| images | none | none | 7 stills, Ken Burns motion, each an equal 1/7th of a 30s timeline, fully silent, no captions. |
 | clips | full | narration | 4 Kling 2.5 clips, stitched, a voiced script, word-synced captions. |
 | clips | none | music | 4 Kling 2.5 clips, stitched, scored by a music bed, no captions — closest to a Maximal-Nostalgia-style format. |
 | clips | none | none | 4 Kling 2.5 clips, stitched, fully silent, no captions. |
+
+narration == "full" images shorts keep script-driven timing — the equal 30s
+split only applies to narration == "none", where there's no audio to derive
+beat lengths from.
 
 Text is only ever burned in for narration == full. narration == none is
 silent-or-scored, never captioned — `audio` (set via `new_project.py --audio

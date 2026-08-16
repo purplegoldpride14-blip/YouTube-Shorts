@@ -9,7 +9,7 @@ fixed stages:
 3. Script, only if narration is wanted (30-45s average)
 4. Descript SRT, only if there's a script
 5. Scene plan, from the topic or the script
-6. Beat batch: 4 motion clips (Kling 2.5) or 5 still images (Nano Banana 2)
+6. Beat batch: 4 motion clips (Kling 2.5) or 7 still images (Nano Banana 2)
 7. Stitch
 8. Description
 9. Deliver — no thumbnail, no highlight clips
@@ -31,9 +31,9 @@ unchanged:
 
 | asset_mode | narration | audio | What it is |
 |---|---|---|---|
-| images | full | (narration track) | 5 stills, Ken Burns motion, a voiced script under it, word-synced captions. |
-| images | none | music | 5 stills, Ken Burns motion, silent — no captions, no beat labels — scored by a music bed. |
-| images | none | none | 5 stills, Ken Burns motion, fully silent, no captions. |
+| images | full | (narration track) | 7 stills, Ken Burns motion, a voiced script under it, word-synced captions. Timing comes from the narration, not an equal split. |
+| images | none | music | 7 stills, Ken Burns motion, each an equal 1/7th of a fixed 30s timeline, scored by a music bed, no captions. |
+| images | none | none | 7 stills, Ken Burns motion, each an equal 1/7th of a fixed 30s timeline, fully silent, no captions. |
 | clips | full | (narration track) | 4 Kling clips, stitched, a voiced script under it, word-synced captions. |
 | clips | none | music | 4 Kling clips, stitched, scored by a music bed, no captions — closest to Maximal Nostalgia's format. |
 | clips | none | none | 4 Kling clips, stitched, fully silent, no captions. |
@@ -47,7 +47,18 @@ narration track. Nothing branches on a command-line flag past that point.
 captions over music" behaviour is gone — narration == none produces a
 silent-or-scored video with nothing burned into the frame. Beat labels in
 `beats.json` are still required (they're how the topic gets broken into its
-four or five specific moments), they're just never rendered.
+four or seven specific moments, depending on asset_mode), they're just never
+rendered.
+
+**asset_mode == "images", narration == "none" beats are equal-length, not
+editorial.** `IMAGES_TOTAL_DURATION_SEC` (30s) split evenly across
+`IMAGES_PER_SHORT` (7) beats — `scene_plan.py beats` computes each beat's
+duration itself and ignores any `"dur"` in `beats.json`, so the only
+editorial call left there is each beat's label. This is unique to images +
+no narration: `asset_mode == "clips"` beats still state their own `"dur"` by
+hand (a clip's natural length varies more than a still's), and
+`narration == "full"` images shorts still take their timing from the actual
+narration length, not this fixed 30s split.
 
 ---
 
@@ -72,8 +83,10 @@ python3 scene_plan.py propose ../projects/<slug>
 python3 scene_plan.py build   ../projects/<slug>
 
 # ---- narration == none ----
-# write out/beats.json by hand: exactly 5 (images) or 4 (clips) entries,
-# [{"label": "...", "dur": ...}, ...] — labels are bookkeeping only, never burned
+# write out/beats.json by hand: exactly 7 (images) or 4 (clips) entries.
+# images: [{"label": "..."}, ...] — duration is always an equal 1/7th of 30s,
+#         "dur" is ignored if present. Labels are bookkeeping only, never burned.
+# clips:  [{"label": "...", "dur": ...}, ...] — "dur" still hand-stated.
 python3 scene_plan.py beats ../projects/<slug>
 # if audio == music: drop a music bed into projects/<slug>/audio/music.<ext>
 # if audio == none: nothing to do here, assemble.py produces a silent video
@@ -107,7 +120,7 @@ failure: a domain not allowlisted, a hard cap exceeded, a validator failing.
 
 ## The numbers, and why
 
-**Beat count: fixed at 5 for images, 4 for clips — never derived.** The
+**Beat count: fixed at 7 for images, 4 for clips — never derived.** The
 parent pipeline algorithmically cut scenes from sentence novelty and target
 pacing; this pipeline doesn't. A script's timing bends to fit the fixed
 count (beats land at the nearest sentence end to an even N-way split of the

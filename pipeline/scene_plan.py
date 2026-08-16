@@ -4,7 +4,7 @@ Plan the beats — this pipeline's word for what the parent pipeline calls
 "scenes". Renamed because narration == "none" shorts have no script to cut
 on, and because the count here is fixed, not derived.
 
-Every Short from this pipeline has exactly IMAGES_PER_SHORT (5) or
+Every Short from this pipeline has exactly IMAGES_PER_SHORT (7) or
 CLIPS_PER_SHORT (4) beats, read from project.json's asset_mode. That's a
 deliberate simplification over the parent pipeline's sentence-novelty cutting
 algorithm: a script's timing bends to fit the fixed count, but the count
@@ -26,12 +26,16 @@ Two branches, chosen by project.json's narration field:
 
   narration == "none"    (beats)
     beats     Reads out/beats.json — a hand-written list of exactly N
-              [{"label": "...", "dur": ...}, ...] entries. Which beat gets how
-              much of the runtime is an editorial call with no audio to
-              derive it from, so the agent states it directly. Validates the
-              count and durations and writes out/scenes.json in the same
-              shape as the narrated branch, so manifest.py and assemble.py
-              don't care which branch produced it.
+              [{"label": "..."}, ...] entries (asset_mode == "clips" also
+              states "dur" per entry). asset_mode == "images" beats are
+              always equal-length — IMAGES_TOTAL_DURATION_SEC split evenly
+              across IMAGES_PER_SHORT, any "dur" in beats.json is ignored —
+              so the only editorial call left is each beat's label.
+              asset_mode == "clips" beats keep their own hand-stated "dur",
+              same as before. Validates the count and durations and writes
+              out/scenes.json in the same shape as the narrated branch, so
+              manifest.py and assemble.py don't care which branch produced
+              it.
 
 Usage:
     python3 scene_plan.py propose <project_dir>          # narration == full
@@ -46,7 +50,8 @@ import argparse
 
 from config import (IMAGES_PER_SHORT, CLIPS_PER_SHORT, BEAT_MIN_SEC,
                     BEAT_SOFT_MAX_SEC, BEAT_HARD_MAX_SEC, DURATION_MIN_SEC,
-                    DURATION_SOFT_MAX_SEC, DURATION_HARD_MAX_SEC)
+                    DURATION_SOFT_MAX_SEC, DURATION_HARD_MAX_SEC,
+                    IMAGES_TOTAL_DURATION_SEC)
 
 SENT_END = re.compile(r"[.!?]$")
 
@@ -173,21 +178,27 @@ def build(project_dir):
 
 def beats(project_dir):
     """Build scenes.json directly from a hand-written out/beats.json — exactly
-    the fixed count for this asset_mode, each with its own stated length."""
+    the fixed count for this asset_mode. asset_mode == "images" beats are
+    always equal-length (IMAGES_TOTAL_DURATION_SEC / IMAGES_PER_SHORT each),
+    so only "label" is required; asset_mode == "clips" beats keep their own
+    hand-stated "dur"."""
     n = fixed_count(project_dir)
+    mode = json.load(open(os.path.join(project_dir, "project.json"))).get("asset_mode")
     beats_path = os.path.join(project_dir, "out", "beats.json")
     if not os.path.exists(beats_path):
-        print(f"FAIL: {beats_path} not found. Write it first, exactly {n} entries: "
-              '[{"label": "arcade cabinet, 1988", "dur": 5.0}, ...]')
+        example = ('[{"label": "arcade cabinet, 1988"}, ...]' if mode == "images"
+                   else '[{"label": "arcade cabinet, 1988", "dur": 5.0}, ...]')
+        print(f"FAIL: {beats_path} not found. Write it first, exactly {n} entries: {example}")
         return 1
     raw = json.load(open(beats_path))
     if len(raw) != n:
         print(f"FAIL: beats.json has {len(raw)} entries, this project needs exactly {n}")
         return 1
 
+    equal_dur = IMAGES_TOTAL_DURATION_SEC / n if mode == "images" else None
     scenes, t = [], 0.0
     for i, b in enumerate(raw, 1):
-        dur = float(b["dur"])
+        dur = equal_dur if equal_dur is not None else float(b["dur"])
         scenes.append({"n": i, "start": t, "end": t + dur, "dur": round(dur, 4),
                        "text": b.get("label", "")})
         t += dur
