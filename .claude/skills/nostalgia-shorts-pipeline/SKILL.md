@@ -45,6 +45,15 @@ generate the rest of the fixed-count batch automatically, no continuation
 prompts. There is no thumbnail check and no highlight-clip stage - this
 pipeline doesn't produce either.
 
+**Never regenerate any beat without the user's explicit go-ahead first -
+non-negotiable.** Every generation call spends real credits. Noticing a
+quality issue, an unwanted detail, or anything else that gives you pause
+about a result is a reason to show it to the user and ask, never a reason
+to redo it on your own judgment. This applies at every stage, not just gate
+2. The one exception: `manifest.py retry` on a beat that genuinely failed
+to generate (an upstream error, a failed download) is bookkeeping, not a
+judgment call, and doesn't need to wait for authorization.
+
 ## Stage sequence
 
 1. **Niche.** `playbooks/01_niche_and_topic.md`. Menu (nostalgia, or
@@ -103,9 +112,11 @@ pipeline doesn't produce either.
      doesn't generate or license music itself. If `audio` is "none", nothing
      to do here.
 6. **Style.** `playbooks/03_visual_style.md`. Offer options, accept a
-   write-in or reference images, write `style.json`. Original art only -
-   never instruct the model to reproduce a specific real photo, film frame,
-   album cover, or trademarked logo; describe the era and scene instead.
+   write-in or reference images, write `style.json`. Every asset is
+   generated fresh by OpenArt, not sourced from a real photo/frame - but
+   real brand names, logos, signage, and readable text in the generated
+   asset are allowed when the topic calls for them (standing user
+   decision, not a per-project call).
 7. **Beat 1, then the batch.** Generate beat 1 alone at locked settings -
    `nano-banana-2 | text2image | 2K | 9:16` for images,
    `gemini-omni-flash | text2video | 4s | 9:16` for clips (native audio,

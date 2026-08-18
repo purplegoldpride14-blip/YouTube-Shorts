@@ -24,20 +24,22 @@ arcade, the exit). asset_mode == images is length-free here — every beat is
 a fixed 4s (28s total) regardless of what `beats.json` says about duration —
 so the only decision is which seven moments to show and in what order.
 
-## 2. Original art only — never a reproduction
+## 2. Every asset is generated fresh — real brands and readable text are allowed
 
 Every beat's asset is generated from scratch by OpenArt, not sourced from a
-real archival photo, movie still, or TV frame. This isn't just a style
-choice: a real photo from any recent-enough decade is still under active
-copyright and often still commercially licensed even decades later; an image
-or clip generated fresh from a text prompt is this project's own original
-work and was never anyone else's photograph to begin with.
+real archival photo, movie still, or TV frame — this project's own original
+work, never anyone else's photograph to begin with.
 
-This means the style block should describe a look, a mood, a palette — not
-instruct the model to recreate a specific known photograph, film frame, or
-album cover, and asking it to render a specific real, currently-trademarked
-logo is worth avoiding the same way. "1980s mall arcade, neon glow, VHS
-grain" is fine. "The cover of [a specific named album]" is not.
+Real brand names, logos, signage, and readable text in the frame are
+allowed when the topic calls for them (e.g. "Remember Your 80s Birthday
+Party?" naming McDonald's or Pizza Hut) — this is an explicit, standing
+decision the user has made for this pipeline, not a per-project judgment
+call to relitigate. Using a real, currently-trademarked brand's name,
+logo, or likeness in generated content carries real trademark/copyright
+exposure; that risk is the user's to accept for their own channel, and
+they have. Don't withhold or water down a brand/text detail the user
+asked for, and don't add a "no text" / "no logos" instruction to a style
+block unless the user specifically asks for that on a given project.
 
 ## 3. Research the look, then offer options
 
@@ -68,13 +70,11 @@ Always close with:
 }
 ```
 
-End the style block with `no text anywhere in the image` — for narration ==
-"full", word-synced captions are burned in later by `assemble.py` as a
-separate overlay, not baked into the asset. For narration == "none",
-`assemble.py` burns no text at all, so there's even less reason for the
-generated asset to carry any. This is about visual text only — a clip's
-spoken dialogue (asset_mode == clips, see step 5) is audio, not burned text,
-and is unaffected by this rule.
+No standing "no text" instruction is required in the style block — readable
+text, signage, and real brand elements in the generated asset are fine (see
+step 2). Word-synced captions for narration == "full" are still burned in
+separately later by `assemble.py`, on top of whatever the asset itself
+shows; that's unrelated to what the asset is allowed to contain.
 
 ## 5. Lock the style on beat 1
 
@@ -117,11 +117,23 @@ Show beat 1. Wait. This is the second and last approval gate. If rejected,
 ask what to change, edit the style block, regenerate, show it again. Every
 later beat inherits this decision.
 
+**Never regenerate a beat — 1 or any other — without the user's explicit
+go-ahead first. This is non-negotiable.** Each generation call spends real
+credits. If something about a result looks off to you (a quality issue, a
+detail you didn't expect), that's a reason to show it and ask, not a reason
+to redo it yourself. Only regenerate after the user says to.
+
 ## 6. Then run the whole batch without stopping
 
 Once beat 1 is approved, generate every remaining beat automatically. No
 check-ins. Stop only for a blocking failure: a blocked domain, a hard cap, a
-validator failing.
+validator failing. "No check-ins" means no progress-update prompts between
+beats — it does not license regenerating a beat you're not happy with; per
+the rule above, that always needs the user first. A genuine technical
+failure (an upstream generation error, a failed download) is different from
+an aesthetic judgment call — `manifest.py retry` to redo a beat that
+actually failed to generate is fine without asking; redoing a beat that
+generated successfully but looks off to you is not.
 
 ```bash
 python3 manifest.py init   ../projects/<slug>
@@ -151,8 +163,8 @@ thumbnail stage follows it. This pipeline doesn't produce either.
 
 ```json
 {
-  "style_block": "1990s consumer camcorder footage, warm VHS colour cast, soft chromatic grain, slight motion blur, timestamp-free, handheld framing, mall/suburban American interiors, period-accurate signage and product packaging rendered as generic unbranded shapes rather than real logos, natural window and fluorescent lighting, no modern devices or fixtures visible anywhere, no text anywhere in the frame.",
+  "style_block": "1990s consumer camcorder footage, warm VHS colour cast, soft chromatic grain, slight motion blur, timestamp-free, handheld framing, mall/suburban American interiors, period-accurate signage and product packaging, natural window and fluorescent lighting, no modern devices or fixtures visible anywhere.",
   "characters": {},
-  "reference_notes": "matched to the VHS-authenticity lane; period signage kept generic/unbranded rather than reproducing real store or product logos"
+  "reference_notes": "matched to the VHS-authenticity lane"
 }
 ```
