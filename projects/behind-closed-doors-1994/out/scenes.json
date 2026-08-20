@@ -1,0 +1,51 @@
+[
+  {
+    "n": 1,
+    "start": 0.0,
+    "end": 4.0,
+    "dur": 4.0,
+    "text": "A woman sitting alone on the edge of a bare mattress in a dim apartment, pill bottles scattered on the nightstand, staring at the wall"
+  },
+  {
+    "n": 2,
+    "start": 4.0,
+    "end": 8.0,
+    "dur": 4.0,
+    "text": "A woman slumped against the bathtub, still dressed, an empty liquor bottle on the tile beside her"
+  },
+  {
+    "n": 3,
+    "start": 8.0,
+    "end": 12.0,
+    "dur": 4.0,
+    "text": "A woman at a cluttered kitchen table, pill bottles and a half-empty bottle among unopened mail, head in her hands"
+  },
+  {
+    "n": 4,
+    "start": 12.0,
+    "end": 16.0,
+    "dur": 4.0,
+    "text": "A woman alone on a fire escape at night, an empty prescription bottle beside her, city lights blurred behind her"
+  },
+  {
+    "n": 5,
+    "start": 16.0,
+    "end": 20.0,
+    "dur": 4.0,
+    "text": "A woman curled up on a worn couch, an ashtray and pill bottles on the coffee table, staring blankly at a muted television"
+  },
+  {
+    "n": 6,
+    "start": 20.0,
+    "end": 24.0,
+    "dur": 4.0,
+    "text": "A woman gripping a bathroom sink, avoiding her own reflection, pill bottles and a rumpled towel on the counter"
+  },
+  {
+    "n": 7,
+    "start": 24.0,
+    "end": 28.0,
+    "dur": 4.0,
+    "text": "A woman sitting on the floor of a mostly empty room, back against the wall, knees pulled to her chest, a few scattered pills and an empty glass beside her"
+  }
+]
