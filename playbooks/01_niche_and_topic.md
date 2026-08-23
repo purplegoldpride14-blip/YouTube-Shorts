@@ -68,7 +68,7 @@ This is the first of two approval gates. Wait for the answer.
 
 > How should this one be made?
 >
-> Visuals: 1. Still images (7 beats, 4s each, 28s total)   2. Motion clips (4 beats, native spoken audio via Gemini Omni Flash)
+> Visuals: 1. Still images (7 beats, 4s each, 28s total)   2. Motion clips (5 beats, native spoken audio via Gemini Omni Flash)
 > Voice-over: 1. Full script   2. None — scored some other way
 
 Write the answers, along with the chosen topic:

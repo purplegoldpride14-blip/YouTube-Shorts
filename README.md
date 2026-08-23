@@ -53,7 +53,7 @@ No pip installs. Everything in `pipeline/` is stdlib.
 | 4 | narration + SRT — narration == full only | `audio_merge.py` then `srt_build.py` |
 | 5 | scene plan | `scene_plan.py propose\|build` (full) or `scene_plan.py beats` (none) |
 | 6 | visual style | `playbooks/03_visual_style.md` |
-| 7 | beat batch: 7 images or 4 clips | `manifest.py init\|next\|submit\|record\|fetch\|verify\|status` |
+| 7 | beat batch: 7 images or 5 clips | `manifest.py init\|next\|submit\|record\|fetch\|verify\|status` |
 | 7 | assemble | `assemble.py ../projects/<slug>` |
 | 8 | description | `description_check.py ../projects/<slug>/description.md ../projects/<slug>/project.json` |
 | 9 | deliver | `deliver.py ../projects/<slug>` |

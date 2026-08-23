@@ -3,7 +3,7 @@
 ## 1. Scene plan
 
 Build the beat timing before locking style — the beat count is fixed by
-asset_mode (7 for images, 4 for clips), but *what's in* each beat is an
+asset_mode (7 for images, 5 for clips), but *what's in* each beat is an
 editorial call based on the topic (and the script, if there is one).
 
 ```bash
@@ -11,7 +11,7 @@ editorial call based on the topic (and the script, if there is one).
 python3 scene_plan.py propose ../projects/<slug>   # then read beats_draft.txt, adjust boundaries.json
 python3 scene_plan.py build   ../projects/<slug>
 
-# narration == none — write out/beats.json by hand first, exactly 7 (images) or 4 (clips) entries
+# narration == none — write out/beats.json by hand first, exactly 7 (images) or 5 (clips) entries
 python3 scene_plan.py beats ../projects/<slug>
 ```
 
@@ -99,7 +99,7 @@ clip generates its own synchronized dialogue/SFX/music. For narration ==
 "none" projects, that generated audio becomes the Short's own soundtrack (see
 step 7 below); for narration == "full" projects `assemble.py` strips it so it
 can't clash with the read narration track, so don't bother writing spoken
-lines into clip prompts there. Exactly 4 clips this way; a clip is trimmed if
+lines into clip prompts there. Exactly 5 clips this way; a clip is trimmed if
 its beat is shorter than 4s, looped if longer (`assemble.py` handles this
 automatically from `scenes.json`'s beat durations — nothing to do here beyond
 generating the clip itself). Keep dialogue-bearing beats close to 4s: a loop
@@ -137,7 +137,7 @@ generated successfully but looks off to you is not.
 
 ```bash
 python3 manifest.py init   ../projects/<slug>
-python3 manifest.py next   ../projects/<slug> 4     # then submit each via OpenArt
+python3 manifest.py next   ../projects/<slug> 5     # then submit each via OpenArt
 python3 manifest.py submit ../projects/<slug> <n> <historyId>
 python3 manifest.py record ../projects/<slug> <n> <url>
 python3 manifest.py fetch  ../projects/<slug>

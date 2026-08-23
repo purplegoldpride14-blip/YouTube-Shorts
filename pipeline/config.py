@@ -48,7 +48,7 @@ VALID_AUDIO = ("music", "none")
 # how long the script is. A script that's louder in some places than others
 # still divides into this many beats; the timing bends, the count doesn't.
 IMAGES_PER_SHORT = 7
-CLIPS_PER_SHORT = 4
+CLIPS_PER_SHORT = 5
 
 # asset_mode == "images", narration == "none" only: beats are always
 # equal-length, IMAGES_TOTAL_DURATION_SEC split evenly across

@@ -4,7 +4,7 @@ description: >
   Produce a standalone vertical YouTube Short end to end - niche and topic
   selection, mode selection (still images or motion clips, voiced or
   unvoiced), script (if voiced), narration audio, aligned SRT (if voiced),
-  scene plan, visual style, beat batch (7 images via Nano Banana 2, or 4
+  scene plan, visual style, beat batch (7 images via Nano Banana 2, or 5
   clips via Gemini Omni Flash with native audio), assembly, and description.
   No thumbnail, no
   highlight-clip stage - the Short itself is the only deliverable. Use when
@@ -91,11 +91,11 @@ judgment call, and doesn't need to wait for authorization.
    - narration == "full": `python3 scene_plan.py propose ../projects/<slug>`,
      read `beats_draft.txt`, adjust `boundaries.json` if a cut lands badly,
      then `python3 scene_plan.py build ../projects/<slug>`. This always
-     produces exactly 7 (images) or 4 (clips) beats - never more, never fewer.
+     produces exactly 7 (images) or 5 (clips) beats - never more, never fewer.
      Timing still comes from the actual narration length here, not an equal
      split.
    - narration == "none": write `out/beats.json` by hand, exactly 7 (images)
-     or 4 (clips) entries - this is where the topic actually becomes four or
+     or 5 (clips) entries - this is where the topic actually becomes five or
      seven specific moments, not one vague beat repeated. asset_mode ==
      "images": each entry only needs `{"label": "..."}` - duration is always
      a fixed 4s (28s total; `scene_plan.py beats` computes it and ignores any

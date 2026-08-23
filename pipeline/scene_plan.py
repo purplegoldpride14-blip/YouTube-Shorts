@@ -5,7 +5,7 @@ Plan the beats — this pipeline's word for what the parent pipeline calls
 on, and because the count here is fixed, not derived.
 
 Every Short from this pipeline has exactly IMAGES_PER_SHORT (7) or
-CLIPS_PER_SHORT (4) beats, read from project.json's asset_mode. That's a
+CLIPS_PER_SHORT (5) beats, read from project.json's asset_mode. That's a
 deliberate simplification over the parent pipeline's sentence-novelty cutting
 algorithm: a script's timing bends to fit the fixed count, but the count
 itself never varies with how the script happens to be written.

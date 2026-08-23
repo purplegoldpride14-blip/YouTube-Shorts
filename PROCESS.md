@@ -95,7 +95,7 @@ python3 scene_plan.py propose ../projects/<slug>
 python3 scene_plan.py build   ../projects/<slug>
 
 # ---- narration == none ----
-# write out/beats.json by hand: exactly 7 (images) or 4 (clips) entries.
+# write out/beats.json by hand: exactly 7 (images) or 5 (clips) entries.
 # images: [{"label": "..."}, ...] — duration is always a fixed 4s (28s total),
 #         "dur" is ignored if present. Labels are bookkeeping only, never burned.
 # clips:  [{"label": "...", "dur": ...}, ...] — "dur" still hand-stated.
@@ -171,8 +171,8 @@ the first frame at both `IMAGE_ASPECT`/`VIDEO_ASPECT` — nothing to reframe
 downstream, and no separate long-form master to cut Shorts out of afterward.
 
 **Duration: floor 15s (WARN), soft max 90s (WARN), hard max 180s (FAIL).**
-The hard max is YouTube's actual Shorts technical cap. 4 clips at 4s each is
-16s if played straight with no narration to stretch the beats — comfortably
+The hard max is YouTube's actual Shorts technical cap. 5 clips at 4s each is
+20s if played straight with no narration to stretch the beats — comfortably
 inside the floor.
 
 **Captions: word-synced, narration == full only.** Full narration burns
