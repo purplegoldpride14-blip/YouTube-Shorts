@@ -126,7 +126,17 @@ IMAGES_NATURAL_MAX_BEATS = 12
 
 # ---------- captions / text overlay ----------
 SRT_MAX_WORDS_PER_CUE = 4   # tighter than long-form; a Short's captions read in a glance
-FONT = "DejaVu Sans"
+
+# Poppins Black (user-supplied, bundled in pipeline/fonts/, SIL Open Font
+# License - see pipeline/fonts/OFL.txt) - rounder and heavier than anything
+# preinstalled in this environment, matched to pusreality's caption look.
+# This environment has no network access to fetch a font on its own (fixed
+# domain allowlist), so it has to be a file shipped in the repo rather than
+# downloaded - preflight.py installs it into the font cache every session.
+# FONT must exactly match the family name fc-list reports for that file
+# (verify with `fc-list | grep Poppins` after preflight.py runs) - a
+# near-miss silently falls back to a default font instead of failing loud.
+FONT = "Poppins Black"
 FONT_SIZE = 84               # large enough to read at a glance on a phone
 
 # YouTube Shorts burns its own UI (title, channel handle, description,

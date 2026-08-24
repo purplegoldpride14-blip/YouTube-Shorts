@@ -203,6 +203,26 @@ YouTube's own Shorts UI (title, channel handle, description, like/comment/
 share rail), which overlays roughly the bottom quarter to third of the
 player and isn't present in the raw file this pipeline assembles.
 
+**Caption font: Poppins Black, bundled in the repo, not the OS's preinstalled
+fonts.** `FONT` (`config.py`) is `"Poppins Black"` — user-supplied, matched
+to pusreality's caption look, licensed SIL Open Font License
+(`pipeline/fonts/OFL.txt`). This environment has no network access to fetch
+a font on its own (the domain allowlist is fixed at session start to two
+API hosts), so the `.ttf` has to ship in the repo rather than be downloaded
+each time. `preflight.py` copies everything in `pipeline/fonts/` into the
+user font directory and refreshes fontconfig's cache on every run — a
+container is ephemeral, so a font installed by hand in one session is gone
+in the next, and `preflight.py` running first is what makes it durable.
+`FONT` must exactly match a family alias fontconfig reports for that file —
+`fc-match` silently substitutes a fallback font on a near-miss instead of
+erroring, so `preflight.py`'s font check verifies the match is exact
+(`fc-match --format=%{family} "<name>"` must list `<name>` among the
+comma-joined aliases it returns, not just return successfully) and fails
+loud if not. To change the caption font: drop the new `.ttf` (plus its
+license) into `pipeline/fonts/`, update `FONT` in `config.py` to the exact
+family name `fc-list` reports for it, and re-run `preflight.py` to confirm
+the match before assembling anything.
+
 **Audio (narration == none): `music` or `none`, set on `project.json`.**
 `assemble.py` refuses to run for a narration == none project until `audio`
 is set to one or the other. Meaning depends on asset_mode:

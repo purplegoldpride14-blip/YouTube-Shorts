@@ -27,9 +27,12 @@ the docs describe it and never override it.
 cd pipeline && python3 preflight.py
 ```
 
-Installs ffmpeg if missing, checks the domain allowlist. If a domain is
-blocked, STOP and tell the user - the allowlist is fixed at session start and
-can't be changed mid-run.
+Installs ffmpeg if missing, installs the bundled caption font
+(`pipeline/fonts/`) into the font cache and verifies it resolves correctly,
+checks the domain allowlist. If a domain is blocked, STOP and tell the user -
+the allowlist is fixed at session start and can't be changed mid-run. If the
+font check fails, STOP and tell the user too - the fallback would render
+captions in the wrong typeface instead of loudly breaking.
 
 ## Two approval gates, nothing else
 
@@ -143,7 +146,9 @@ judgment call, and doesn't need to wait for authorization.
    clip's own generated audio as the primary track and only uses `audio` to
    decide whether a ducked music bed is mixed in underneath it. Refuses to
    run for a narration == "none" project until `audio` is set. Nothing to
-   choose here beyond running it. Captions burn large (`FONT_SIZE` 84px) and
+   choose here beyond running it. Captions burn in Poppins Black (`FONT`,
+   bundled in `pipeline/fonts/` and installed by `preflight.py` every
+   session - see "Always run first" above), large (`FONT_SIZE` 84px) and
    well above the bottom of the frame (`CAPTION_MARGIN_V_FRAC` 0.45 of
    `OUT_HEIGHT` up from the bottom edge) - YouTube's own Shorts UI (title,
    handle, description, like/comment/share rail) covers roughly the bottom

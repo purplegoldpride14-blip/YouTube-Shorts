@@ -11,7 +11,7 @@ skill loads itself.
 
 ```bash
 cd pipeline
-python3 preflight.py                       # always first; installs ffmpeg if needed
+python3 preflight.py                       # always first; installs ffmpeg + the caption font if needed
 python3 new_project.py my-first-short --asset-mode clips --narration none \
     --niche "nostalgia" --topic "90s mall culture"
 python3 new_project.py my-first-short --audio music   # or --audio none for a silent short
@@ -37,6 +37,8 @@ size limit, to chat in chunks).
 ## Requirements
 
 - Python 3.9+, ffmpeg (preflight installs it), curl
+- The caption font (`pipeline/fonts/`, currently Poppins Black) — preflight
+  installs it into the font cache every session, no network fetch needed
 - Descript MCP for the transcript SRT — narration == "full" projects only
 - OpenArt MCP for the images (Nano Banana 2) or clips (Gemini Omni Flash)
 - NextLev MCP is optional but makes the topic research much better

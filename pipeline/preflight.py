@@ -11,11 +11,13 @@ Usage:
     python3 preflight.py --no-install
 """
 import sys
+import os
 import subprocess
 import shutil
 import argparse
+import glob
 
-from config import REQUIRED_DOMAINS
+from config import REQUIRED_DOMAINS, FONT
 
 
 def sh(cmd, timeout=600):
@@ -53,6 +55,40 @@ def check_tool(name, allow_install=True):
     return ok
 
 
+def install_fonts():
+    """Copy every font bundled in pipeline/fonts/ into the user font
+    directory and refresh fontconfig's cache. This container is ephemeral,
+    so a font installed by hand in one session (via fc-cache) is gone in the
+    next - this is what makes FONT (config.py) durable across sessions
+    without needing network access to fetch anything."""
+    src_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "fonts")
+    files = glob.glob(os.path.join(src_dir, "*.ttf")) + glob.glob(os.path.join(src_dir, "*.otf"))
+    if not files:
+        return
+    dest_dir = os.path.expanduser("~/.fonts")
+    os.makedirs(dest_dir, exist_ok=True)
+    for f in files:
+        shutil.copy(f, dest_dir)
+    sh(f"fc-cache -f {dest_dir}")
+
+
+def check_font(name):
+    """fc-match always returns SOMETHING - a near-miss silently substitutes
+    a fallback font instead of failing, so the check is whether the matched
+    font's family aliases include the one asked for, not just that fc-match
+    succeeded. A font can register multiple family names for the same file
+    (e.g. Poppins Black reports both "Poppins" and "Poppins Black") -
+    %{family} returns all of them comma-joined, so check membership, not
+    equality against the first one."""
+    r = subprocess.run(["fc-match", "--format=%{family}", name],
+                       capture_output=True, text=True)
+    aliases = [f.strip() for f in r.stdout.split(",")]
+    ok = name in aliases
+    note = "" if ok else f" (fell back to {aliases!r})"
+    print(f"  [{'OK' if ok else 'FAIL'}] {name}{note}")
+    return ok
+
+
 def check_domain(d):
     """A real origin response (any status) proves reachability. A proxy block
     surfaces as a connection failure or an x-deny-reason header."""
@@ -79,7 +115,12 @@ def main():
     print("Domains (must be allowlisted at session start):")
     doms = all(check_domain(d) for d in REQUIRED_DOMAINS)
 
-    if not (tools and doms):
+    print("Fonts:")
+    if not a.no_install:
+        install_fonts()
+    fonts = check_font(FONT)
+
+    if not (tools and doms and fonts):
         print("\nPREFLIGHT FAILED - fix before starting. The domain allowlist cannot "
               "be changed mid-session; restart the session with all domains enabled.")
         return 1
