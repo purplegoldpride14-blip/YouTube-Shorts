@@ -137,7 +137,7 @@ SRT_MAX_WORDS_PER_CUE = 4   # tighter than long-form; a Short's captions read in
 # (verify with `fc-list | grep Poppins` after preflight.py runs) - a
 # near-miss silently falls back to a default font instead of failing loud.
 FONT = "Poppins Black"
-FONT_SIZE = 84               # large enough to read at a glance on a phone
+FONT_SIZE = 120               # large enough to read at a glance on a phone
 
 # YouTube Shorts burns its own UI (title, channel handle, description,
 # like/comment/share rail) over roughly the bottom quarter to third of the
