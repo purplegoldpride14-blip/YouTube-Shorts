@@ -1,0 +1,22 @@
+{
+  "parts": [
+    "narration.mp3"
+  ],
+  "sample_rate": 44100,
+  "part_samples": [
+    2074624
+  ],
+  "part_offsets_sec": [
+    0.0
+  ],
+  "total_samples": 2074624,
+  "duration_sec": 47.04362811791383,
+  "merged_wav": "merged.wav",
+  "loudness": {
+    "input_lufs": -25.04,
+    "output_lufs": -14.81,
+    "gain_db": 10.23,
+    "target_lufs": -14.0,
+    "true_peak_db": -1.46
+  }
+}

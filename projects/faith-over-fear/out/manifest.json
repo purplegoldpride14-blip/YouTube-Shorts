@@ -1,0 +1,62 @@
+{
+  "asset_mode": "images",
+  "ext": "png",
+  "beats": {
+    "1": {
+      "n": 1,
+      "prompt": "A lone anonymous figure seen from behind, standing at the edge of a high cliff overlook, wind moving their clothing, looking out over a vast uncertain landscape shrouded in mist below. Cinematic hopecore photography, soft moody natural light, shallow depth of field, desaturated but warm color grading, gentle film grain, symbolic and atmospheric, quiet and contemplative mood, no visible face, nothing overtly staged.",
+      "state": "done",
+      "historyId": "ix0bxrDOhBnjJPk617jt",
+      "url": "https://cdn.openart.ai/openart-ai/production/2026-08/create-image/hVD34jcNZMjgpWsjRsjz/image_1787529867385_e83123d9_1787529867952_2fcdc40f.png",
+      "file": "/workspace/youtube-shorts/projects/faith-over-fear/frames/beat_001.png"
+    },
+    "2": {
+      "n": 2,
+      "prompt": "Dark storm clouds rolling and gathering over a vast empty landscape, distant and ominous but not violent, a single small silhouette of a person barely visible far below dwarfed by the sky. Cinematic hopecore photography, soft moody natural light, shallow depth of field, desaturated but warm color grading, gentle film grain, symbolic and atmospheric, quiet and contemplative mood.",
+      "state": "done",
+      "historyId": "OXpV4dad9Dqq5ziuGOSt",
+      "url": "https://cdn.openart.ai/openart-ai/production/2026-08/create-image/hVD34jcNZMjgpWsjRsjz/image_1787529943387_35fdeddd_1787529944144_33309a9e.png",
+      "file": "/workspace/youtube-shorts/projects/faith-over-fear/frames/beat_002.png"
+    },
+    "3": {
+      "n": 3,
+      "prompt": "A lone anonymous figure sitting alone in a dim, sparsely lit room, shadows stretching long across the floor from a single window, head slightly bowed, weight of thought in their posture. Cinematic hopecore photography, soft moody natural light, shallow depth of field, desaturated but warm color grading, gentle film grain, symbolic and atmospheric, quiet and contemplative mood, no visible face, nothing overtly staged.",
+      "state": "done",
+      "historyId": "kVbGNQoT3PGUlMTuDqBn",
+      "url": "https://cdn.openart.ai/openart-ai/production/2026-08/create-image/hVD34jcNZMjgpWsjRsjz/image_1787529945702_95f6489a_1787529946378_42eb84c4.png",
+      "file": "/workspace/youtube-shorts/projects/faith-over-fear/frames/beat_003.png"
+    },
+    "4": {
+      "n": 4,
+      "prompt": "A single beam of warm sunlight breaking through a heavy bank of storm clouds over an open field, the light touching the ground below in sharp contrast to the darkness around it. Cinematic hopecore photography, soft moody natural light, shallow depth of field, desaturated but warm color grading, gentle film grain, symbolic and atmospheric, quiet and contemplative mood.",
+      "state": "done",
+      "historyId": "q1pn5IgT64H8xq6EUulU",
+      "url": "https://cdn.openart.ai/openart-ai/production/2026-08/create-image/hVD34jcNZMjgpWsjRsjz/image_1787529950169_ea1f3f53_1787529950601_d770bd6c.png",
+      "file": "/workspace/youtube-shorts/projects/faith-over-fear/frames/beat_004.png"
+    },
+    "5": {
+      "n": 5,
+      "prompt": "A lone anonymous figure seen from behind, mid-stride walking forward down a long empty road that stretches toward a bright horizon, morning light ahead of them, motion caught mid-step. Cinematic hopecore photography, soft moody natural light, shallow depth of field, desaturated but warm color grading, gentle film grain, symbolic and atmospheric, quiet and contemplative mood, no visible face, nothing overtly staged.",
+      "state": "done",
+      "historyId": "FL90CNBddRRVNWEdB5uv",
+      "url": "https://cdn.openart.ai/openart-ai/production/2026-08/create-image/hVD34jcNZMjgpWsjRsjz/image_1787529948621_9767290f_1787529949207_358027de.png",
+      "file": "/workspace/youtube-shorts/projects/faith-over-fear/frames/beat_005.png"
+    },
+    "6": {
+      "n": 6,
+      "prompt": "Close-up of two hands folded together in prayer, resting on a windowsill, soft warm light streaming in and catching the hands, everything else softly out of focus. Cinematic hopecore photography, soft moody natural light, shallow depth of field, desaturated but warm color grading, gentle film grain, symbolic and atmospheric, quiet and contemplative mood.",
+      "state": "done",
+      "historyId": "CuYWC5nh0QUJSPwZj4b1",
+      "url": "https://cdn.openart.ai/openart-ai/production/2026-08/create-image/hVD34jcNZMjgpWsjRsjz/image_1787529954642_272229ef_1787529955273_383c77f8.png",
+      "file": "/workspace/youtube-shorts/projects/faith-over-fear/frames/beat_006.png"
+    },
+    "7": {
+      "n": 7,
+      "prompt": "A lone anonymous figure standing at the edge of calm water at sunrise, facing the horizon as warm golden light spreads across the sky and reflects on the water's surface, still and at peace. Cinematic hopecore photography, soft moody natural light, shallow depth of field, desaturated but warm color grading, gentle film grain, symbolic and atmospheric, quiet and contemplative mood, no visible face, nothing overtly staged.",
+      "state": "done",
+      "historyId": "WVHPHKcEdu45T8cUfY4b",
+      "url": "https://cdn.openart.ai/openart-ai/production/2026-08/create-image/hVD34jcNZMjgpWsjRsjz/image_1787529954078_bfd277fd_1787529954830_eeaf9ad5.png",
+      "file": "/workspace/youtube-shorts/projects/faith-over-fear/frames/beat_007.png"
+    }
+  }
+}
