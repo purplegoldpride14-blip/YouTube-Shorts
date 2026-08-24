@@ -2,9 +2,13 @@
 
 ## 1. Scene plan
 
-Build the beat timing before locking style — the beat count is fixed by
-asset_mode (7 for images, 5 for clips), but *what's in* each beat is an
-editorial call based on the topic (and the script, if there is one).
+Build the beat timing before locking style. The beat count is fixed by
+asset_mode for every combination except one: asset_mode == "clips" is always
+5, asset_mode == "images" with narration == "none" is always 7, but
+asset_mode == "images" with narration == "full" is derived from the script
+itself — one beat per sentence, not a fixed number (see below). Either way,
+*what's in* each beat is an editorial call based on the topic (and the
+script, if there is one).
 
 ```bash
 # narration == full
@@ -15,9 +19,18 @@ python3 scene_plan.py build   ../projects/<slug>
 python3 scene_plan.py beats ../projects/<slug>
 ```
 
+For narration == full + asset_mode == images, `propose` cuts one beat per
+sentence — a longer or more complex script naturally produces more beats,
+a terser one fewer, rather than bending a fixed count to fit. A sentence
+that alone would fall under `BEAT_MIN_SEC` merges into its neighbor; a
+segment that ends up over `BEAT_SOFT_MAX_SEC` splits at the nearest comma;
+`IMAGES_NATURAL_MAX_BEATS` caps runaway fragmentation from an unusually
+staccato script. Read `beats_draft.txt` and adjust `boundaries.json` by hand
+if a cut lands badly, same as before.
+
 For narration == none, deciding each beat's label (and, for asset_mode ==
 clips, its length) *is* the scene plan — there's no transcript to derive it
-from, so this is where the topic actually gets broken into its four or seven
+from, so this is where the topic actually gets broken into its five or seven
 specific moments (not "1990s mall culture" as one vague beat repeated, but
 distinct, specific scenes within it: the food court, the record store, the
 arcade, the exit). asset_mode == images is length-free here — every beat is
@@ -86,9 +99,10 @@ asset_mode:
 model nano-banana-2 | text2image | 2K | 9:16 | count 1 | autoEnhancePrompt false
 ```
 `autoEnhancePrompt` must stay false — it rewrites the style block and subjects
-drift across beats. Exactly 7 beats this way, each held for its scene-plan
-duration with Ken Burns motion (narration == none: a fixed 4s each, 28s
-total; narration == full: whatever the narration-driven split gives it).
+drift across beats. narration == none: exactly 7 beats, each a fixed 4s (28s
+total) with Ken Burns motion. narration == full: however many beats
+`scene_plan.py propose`/`build` derived (one per sentence, not fixed), each
+held for its own scene-plan duration with Ken Burns motion.
 
 **asset_mode == clips** — OpenArt Gemini Omni Flash:
 ```

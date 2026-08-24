@@ -90,10 +90,14 @@ judgment call, and doesn't need to wait for authorization.
 5. **Scene plan.**
    - narration == "full": `python3 scene_plan.py propose ../projects/<slug>`,
      read `beats_draft.txt`, adjust `boundaries.json` if a cut lands badly,
-     then `python3 scene_plan.py build ../projects/<slug>`. This always
-     produces exactly 7 (images) or 5 (clips) beats - never more, never fewer.
-     Timing still comes from the actual narration length here, not an equal
-     split.
+     then `python3 scene_plan.py build ../projects/<slug>`. asset_mode ==
+     "clips" always produces exactly 5 beats - never more, never fewer.
+     asset_mode == "images" is different: the count isn't fixed, it's
+     derived - one beat per sentence (natural cuts), so a longer or more
+     complex script gets more beats and a terser one gets fewer
+     (`IMAGES_NATURAL_MAX_BEATS` caps runaway fragmentation from an
+     unusually staccato script). Timing still comes from the actual
+     narration length here, not an equal split.
    - narration == "none": write `out/beats.json` by hand, exactly 7 (images)
      or 5 (clips) entries - this is where the topic actually becomes five or
      seven specific moments, not one vague beat repeated. asset_mode ==
@@ -139,7 +143,12 @@ judgment call, and doesn't need to wait for authorization.
    clip's own generated audio as the primary track and only uses `audio` to
    decide whether a ducked music bed is mixed in underneath it. Refuses to
    run for a narration == "none" project until `audio` is set. Nothing to
-   choose here beyond running it.
+   choose here beyond running it. Captions burn large (`FONT_SIZE` 84px) and
+   well above the bottom of the frame (`CAPTION_MARGIN_V_FRAC` 0.45 of
+   `OUT_HEIGHT` up from the bottom edge) - YouTube's own Shorts UI (title,
+   handle, description, like/comment/share rail) covers roughly the bottom
+   quarter to third of the player once uploaded, and that overlay isn't
+   present in the raw file assembled here.
 9. **Description, then deliver.** `playbooks/04_description.md`. Use
    `prompts/description_prompt.txt`, base it on the script (if any) or the
    beat labels, then `description_check.py`. Once it passes:

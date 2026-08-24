@@ -98,20 +98,46 @@ MUSIC_DUCK_LUFS = -30.0       # further ducked under the narration track itself
 # ---------- beats (scene/clip timing) ----------
 # A "beat" is this pipeline's unit — one image or one clip on screen. Named
 # beats rather than "scenes" because narration == "none" shorts have no
-# script to derive scene boundaries from, and because the count is fixed
-# (IMAGES_PER_SHORT / CLIPS_PER_SHORT above) rather than algorithmically
-# derived — these floors/caps exist only to catch a beat that ends up
-# absurdly short or long once the fixed count is divided into the total
-# duration, not to drive the cutting decision itself.
+# script to derive scene boundaries from.
+#
+# asset_mode == "clips", and asset_mode == "images" with narration == "none",
+# both use the fixed count above (CLIPS_PER_SHORT / IMAGES_PER_SHORT) — these
+# floors/caps exist only to catch a beat that ends up absurdly short or long
+# once that fixed count is divided into the total duration, not to drive the
+# cutting decision itself.
+#
+# asset_mode == "images" with narration == "full" is different: the beat
+# count isn't fixed at all — scene_plan.py cuts one beat per sentence (natural
+# pause points), merging a sentence that alone would fall under BEAT_MIN_SEC
+# into its neighbor, and splitting one that alone would run over
+# BEAT_SOFT_MAX_SEC at the nearest comma. Here these floors/caps DO drive the
+# cutting decision, not just validate it after the fact.
 BEAT_MIN_SEC = 1.5
 BEAT_SOFT_MAX_SEC = 15.0
 BEAT_HARD_MAX_SEC = 25.0
 
+# Safety cap only for the natural-cut path above (asset_mode == "images",
+# narration == "full") — stops a script written in unusually short, staccato
+# sentences from fragmenting into an excessive number of image generations
+# (each one real OpenArt credits). Beats are merged pairwise, shortest gap
+# first, until the count is at or under this — never a target to hit, only a
+# ceiling.
+IMAGES_NATURAL_MAX_BEATS = 12
+
 # ---------- captions / text overlay ----------
 SRT_MAX_WORDS_PER_CUE = 4   # tighter than long-form; a Short's captions read in a glance
 FONT = "DejaVu Sans"
-FONT_SIZE = 64
-TEXT_SAFE_MARGIN_PX = 90     # keep burned text clear of the UI overlap zone on Shorts/Reels
+FONT_SIZE = 84               # large enough to read at a glance on a phone
+
+# YouTube Shorts burns its own UI (title, channel handle, description,
+# like/comment/share rail) over roughly the bottom quarter to third of the
+# player, and that overlay isn't present in the raw file we assemble - so a
+# fixed small bottom margin looks fine here but gets covered once uploaded.
+# Anchored to a fraction of OUT_HEIGHT (not a fixed pixel count) so it holds
+# up if OUT_HEIGHT ever changes: this is the distance from the bottom edge
+# to the caption's anchor line, pushing the caption block up toward vertical
+# center and comfortably clear of that reserved UI zone.
+CAPTION_MARGIN_V_FRAC = 0.45
 
 # ---------- images (asset_mode == "images") ----------
 IMAGE_MODEL = "nano-banana-2"

@@ -58,7 +58,7 @@ from config import (OUT_WIDTH, OUT_HEIGHT, OUT_FPS, VIDEO_CRF, VIDEO_PRESET,
                     TARGET_LUFS, TARGET_TP, TARGET_LRA, MOTION_DEFAULT,
                     KENBURNS_ZOOM, LOUDNESS_TOLERANCE, VIDEO_CLIP_SEC,
                     MUSIC_BED_LUFS, MUSIC_DUCK_LUFS, FONT, FONT_SIZE,
-                    TEXT_SAFE_MARGIN_PX, VALID_AUDIO, VIDEO_AUDIO)
+                    CAPTION_MARGIN_V_FRAC, VALID_AUDIO, VIDEO_AUDIO)
 
 TS_RE = re.compile(r"(\d\d):(\d\d):(\d\d),(\d\d\d)")
 
@@ -124,8 +124,9 @@ def load_srt_cues(path):
 
 def write_ass_from_srt(srt_path, dest):
     cues = load_srt_cues(srt_path)
+    margin_v = round(OUT_HEIGHT * CAPTION_MARGIN_V_FRAC)
     header = ASS_HEADER.format(w=OUT_WIDTH, h=OUT_HEIGHT, font=FONT, size=FONT_SIZE,
-                               margin=TEXT_SAFE_MARGIN_PX)
+                               margin=margin_v)
     events = [f"Dialogue: 0,{fmt_ass_ts(s)},{fmt_ass_ts(e)},Default,,0,0,0,,{t}"
              for s, e, t in cues]
     open(dest, "w", encoding="utf-8").write(header + "\n".join(events) + "\n")

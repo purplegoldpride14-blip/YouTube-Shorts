@@ -65,16 +65,20 @@ deliverable.
 
 | asset_mode | narration | audio | What it is |
 |---|---|---|---|
-| images | full | narration | 7 Nano-Banana-2 stills, Ken Burns motion, a voiced script, word-synced captions. |
+| images | full | narration | Nano-Banana-2 stills (one per sentence, count derived from the script — not fixed), Ken Burns motion, a voiced script, word-synced captions. |
 | images | none | music | 7 stills, Ken Burns motion, 4s each (28s total), scored by a music bed, no captions. |
 | images | none | none | 7 stills, Ken Burns motion, 4s each (28s total), fully silent, no captions. |
-| clips | full | narration | 4 Gemini Omni Flash clips, stitched, a voiced script, word-synced captions — each clip's own generated audio is stripped so it doesn't clash with the narration. |
-| clips | none | clip | 4 Gemini Omni Flash clips, stitched, each clip's own native generated audio (dialogue, SFX) kept as the soundtrack, no captions. |
-| clips | none | clip+music | 4 Gemini Omni Flash clips, stitched, native clip audio with a ducked music bed mixed in underneath, no captions. |
+| clips | full | narration | 5 Gemini Omni Flash clips, stitched, a voiced script, word-synced captions — each clip's own generated audio is stripped so it doesn't clash with the narration. |
+| clips | none | clip | 5 Gemini Omni Flash clips, stitched, each clip's own native generated audio (dialogue, SFX) kept as the soundtrack, no captions. |
+| clips | none | clip+music | 5 Gemini Omni Flash clips, stitched, native clip audio with a ducked music bed mixed in underneath, no captions. |
 
-narration == "full" images shorts keep script-driven timing — the equal
-28s/4s-per-beat split only applies to narration == "none", where there's no
-audio to derive beat lengths from.
+narration == "full" images shorts keep script-driven timing AND a
+script-driven beat count — one beat per sentence, not a fixed 7. A longer or
+more complex script produces more beats, a terser one fewer; see
+`scene_plan.py`'s `propose` for exactly how (sentence cuts, short sentences
+merged forward, long ones split at a comma, `IMAGES_NATURAL_MAX_BEATS` as a
+safety ceiling). The fixed 7-beat / equal 28s-4s-per-beat split only applies
+to narration == "none", where there's no script to derive cuts from.
 
 Gemini Omni Flash generates synchronized audio (dialogue, SFX, music) natively
 with every clip — it's not a togglable setting, so write what's said directly

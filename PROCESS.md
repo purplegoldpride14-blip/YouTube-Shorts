@@ -31,12 +31,12 @@ unchanged:
 
 | asset_mode | narration | audio | What it is |
 |---|---|---|---|
-| images | full | (narration track) | 7 stills, Ken Burns motion, a voiced script under it, word-synced captions. Timing comes from the narration, not an equal split. |
+| images | full | (narration track) | Stills (one per sentence, count derived from the script — not fixed), Ken Burns motion, a voiced script under it, word-synced captions. Timing comes from the narration, not an equal split. |
 | images | none | music | 7 stills, Ken Burns motion, 4s each (28s total), scored by a music bed, no captions. |
 | images | none | none | 7 stills, Ken Burns motion, 4s each (28s total), fully silent, no captions. |
-| clips | full | (narration track) | 4 Gemini Omni Flash clips, stitched, a voiced script under it, word-synced captions. Each clip's own generated audio is stripped so it can't clash with the narration. |
-| clips | none | clip | 4 Gemini Omni Flash clips, stitched, each clip's own generated audio (dialogue, SFX) kept as the soundtrack, no captions. |
-| clips | none | clip+music | 4 Gemini Omni Flash clips, stitched, native clip audio with a ducked `audio/music.*` bed mixed in underneath, no captions. |
+| clips | full | (narration track) | 5 Gemini Omni Flash clips, stitched, a voiced script under it, word-synced captions. Each clip's own generated audio is stripped so it can't clash with the narration. |
+| clips | none | clip | 5 Gemini Omni Flash clips, stitched, each clip's own generated audio (dialogue, SFX) kept as the soundtrack, no captions. |
+| clips | none | clip+music | 5 Gemini Omni Flash clips, stitched, native clip audio with a ducked `audio/music.*` bed mixed in underneath, no captions. |
 
 asset_mode and narration are both set once, in `new_project.py`, and read by
 every later stage. `audio` is set the same way, but only matters for
@@ -47,7 +47,7 @@ narration track. Nothing branches on a command-line flag past that point.
 captions over music" behaviour is gone — narration == none produces a video
 with nothing burned into the frame, scored by whatever `audio` picks. Beat
 labels in `beats.json` are still required (they're how the topic gets broken
-into its four or seven specific moments, depending on asset_mode), they're
+into its five or seven specific moments, depending on asset_mode), they're
 just never rendered.
 
 **asset_mode == "clips" generates its own audio — write the dialogue into
@@ -68,6 +68,20 @@ no narration: `asset_mode == "clips"` beats still state their own `"dur"` by
 hand (a clip's natural length varies more than a still's), and
 `narration == "full"` images shorts still take their timing from the actual
 narration length, not this fixed 28s split.
+
+**asset_mode == "images", narration == "full" beat COUNT is derived, not
+fixed either.** Every other combination has a fixed beat count
+(`IMAGES_PER_SHORT` or `CLIPS_PER_SHORT`) that the script/beats bend to fit.
+This one is the exception: `scene_plan.py propose` cuts one beat per
+sentence — the natural pause points in the script — merging a sentence that
+alone would fall under `BEAT_MIN_SEC` into its neighbor, and splitting a
+segment that ends up over `BEAT_SOFT_MAX_SEC` at the nearest comma.
+`IMAGES_NATURAL_MAX_BEATS` (12) is a safety ceiling against an unusually
+staccato script fragmenting into an excessive number of paid image
+generations — never a target to hit. A longer or more complex script gets
+more beats; a terser one gets fewer. `build`'s validation reflects this: it
+checks `boundaries.json` is sorted, unique, and in range, but no longer
+checks the count against a fixed number for this one combination.
 
 ---
 
@@ -180,6 +194,14 @@ inside the floor.
 narration == none burns nothing — no word captions, no beat-labeled title
 cards, no text of any kind. `beats.json` labels exist for planning and the
 description stage only.
+
+**Caption size and position: large, vertically well above the bottom.**
+`FONT_SIZE` (84px) and `CAPTION_MARGIN_V_FRAC` (0.45, the fraction of
+`OUT_HEIGHT` the caption's anchor sits up from the bottom edge) both live in
+`config.py`. Sized and positioned to read clearly on a phone and to clear
+YouTube's own Shorts UI (title, channel handle, description, like/comment/
+share rail), which overlays roughly the bottom quarter to third of the
+player and isn't present in the raw file this pipeline assembles.
 
 **Audio (narration == none): `music` or `none`, set on `project.json`.**
 `assemble.py` refuses to run for a narration == none project until `audio`
