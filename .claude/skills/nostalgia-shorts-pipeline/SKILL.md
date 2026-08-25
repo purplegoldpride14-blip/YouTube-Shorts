@@ -158,9 +158,10 @@ judgment call, and doesn't need to wait for authorization.
    `prompts/description_prompt.txt`, base it on the script (if any) or the
    beat labels, then `description_check.py`. Once it passes:
    `python3 deliver.py ../projects/<slug>`
-   Verifies `description.md` and `out/final.mp4` exist (plus
-   `out/captions.srt` and the narration file, for narration == "full"
-   projects only), mirrors the description and narration into `out/`, checks
+   Verifies `description.md`, `out/final.mp4`, and a non-empty
+   `project.json` title exist (plus `out/captions.srt` and the narration
+   file, for narration == "full" projects only), mirrors the description,
+   the title (as `out/title.txt`), and narration into `out/`, checks
    `out/final.mp4` against `GIT_PUSH_MAX_BYTES`. `out/` is gitignored by
    default, so this always needs `-f`:
    - **Under the limit:** git-add the file as-is.

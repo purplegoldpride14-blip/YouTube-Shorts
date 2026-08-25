@@ -3,13 +3,14 @@
 Prepare the finished project for handoff.
 
 Does four things, in order:
-1. Verifies the deliverables exist: description.md, out/final.mp4, and — for
-   narration == "full" projects only — narration_part*.txt and
-   out/captions.srt. No thumbnail and no highlight-clip deliverables; this
-   pipeline doesn't produce either.
-2. Mirrors description.md and narration_part*.txt (if any) into out/, so
-   out/ is the one folder with everything the user actually takes elsewhere.
-   The originals at the project root are untouched.
+1. Verifies the deliverables exist: description.md, out/final.mp4, a
+   non-empty title in project.json, and — for narration == "full" projects
+   only — narration_part*.txt and out/captions.srt. No thumbnail and no
+   highlight-clip deliverables; this pipeline doesn't produce either.
+2. Mirrors description.md and narration_part*.txt (if any) into out/, and
+   writes project.json's title into out/title.txt, so out/ is the one
+   folder with everything the user actually takes elsewhere. The originals
+   at the project root (description.md, project.json) are untouched.
 3. Checks out/final.mp4 against GIT_PUSH_MAX_BYTES. Under the limit is left
    alone for the agent to git-add (with -f, since out/ is gitignored) and
    push. Over the limit is split into CHAT_CHUNK_BYTES pieces under
@@ -82,6 +83,7 @@ def main():
 
     proj = json.load(open(os.path.join(pd, "project.json")))
     narrated = proj.get("narration") == "full"
+    title = (proj.get("title") or "").strip()
 
     narration_files = sorted(glob.glob(os.path.join(pd, "narration_part*.txt")))
     required = {
@@ -91,6 +93,8 @@ def main():
     if narrated:
         required["captions"] = os.path.join(pd, "out", "captions.srt")
     missing = [name for name, p in required.items() if not os.path.exists(p)]
+    if not title:
+        missing.append("title")
     if narrated and not narration_files:
         missing.append("narration")
     if missing:
@@ -98,23 +102,27 @@ def main():
         for name in missing:
             if name in required:
                 print(f"      expected {required[name]}")
+            elif name == "title":
+                print(f"      expected a non-empty \"title\" in {os.path.join(pd, 'project.json')}")
             else:
                 print(f"      expected {os.path.join(pd, 'narration_part*.txt')}")
         return 1
 
-    have = ["description.md", "out/final.mp4"]
+    have = ["description.md", "out/final.mp4", "title"]
     if narrated:
         have += [f"{len(narration_files)} narration file(s)", "out/captions.srt"]
     print(f"OK  {', '.join(have)} present")
 
     out_dir = os.path.join(pd, "out")
     shutil.copy2(required["description"], os.path.join(out_dir, "description.md"))
+    with open(os.path.join(out_dir, "title.txt"), "w", encoding="utf-8") as f:
+        f.write(title + "\n")
     for f in narration_files:
         shutil.copy2(f, os.path.join(out_dir, os.path.basename(f)))
     if narration_files:
-        print(f"OK  mirrored description.md and narration into {out_dir}")
+        print(f"OK  mirrored description.md, title.txt, and narration into {out_dir}")
     else:
-        print(f"OK  mirrored description.md into {out_dir}")
+        print(f"OK  mirrored description.md and title.txt into {out_dir}")
 
     git_paths, chat_items = [], []
 
@@ -128,7 +136,7 @@ def main():
               f"{len(parts)} part(s), sha256 {checksum}")
         chat_items.append(("out/final.mp4", checksum, parts))
 
-    always = ["description.md", "out/description.md"]
+    always = ["description.md", "out/description.md", "out/title.txt"]
     if narrated:
         always.append("out/captions.srt")
     always += [os.path.join("out", os.path.basename(f)) for f in narration_files]
