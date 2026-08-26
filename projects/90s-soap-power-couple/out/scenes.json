@@ -1,0 +1,37 @@
+[
+  {
+    "n": 1,
+    "start": 0.0,
+    "end": 4.0,
+    "dur": 4.0,
+    "text": "A traditional wedding ceremony in a church, minister mid-vows, bride and groom at the altar, guests seated in the pews"
+  },
+  {
+    "n": 2,
+    "start": 4.0,
+    "end": 8.0,
+    "dur": 4.0,
+    "text": "The back doors of the church burst open, a figure appears in the doorway, guests turning in shock"
+  },
+  {
+    "n": 3,
+    "start": 8.0,
+    "end": 12.0,
+    "dur": 4.0,
+    "text": "The figure strides quickly down the aisle as guests gasp and murmur"
+  },
+  {
+    "n": 4,
+    "start": 12.0,
+    "end": 16.0,
+    "dur": 4.0,
+    "text": "The groom steps slightly in front of the bride, the figure now near the altar steps"
+  },
+  {
+    "n": 5,
+    "start": 16.0,
+    "end": 20.0,
+    "dur": 4.0,
+    "text": "The figure declares the objection at the altar, wide shot of stunned guests"
+  }
+]

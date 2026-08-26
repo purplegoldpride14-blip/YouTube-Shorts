@@ -1,0 +1,9 @@
+{
+  "style_block": "1990s daytime-soap-opera cinematography, warm glossy 35mm film look, soft even lighting typical of a church interior, wide ensemble shots more than isolated close-ups, stained-glass window light, heightened melodrama in the performances and reactions.",
+  "characters": {
+    "bride": "a woman in a traditional white wedding gown and veil",
+    "groom": "a man in a black tuxedo",
+    "interloper": "a person in a dark rumpled coat, clearly out of place among the formally dressed wedding guests"
+  },
+  "reference_notes": "Generic soap-opera 'wedding interrupted' trope - an ensemble scene, not a recreation of any real show's characters, actors, or episode. Switched to this from a two-character confession scene after Gemini Omni Flash's safety filter blocked that version, flagging it as resembling real prominent individuals - wide ensemble/reaction shots and less tightly-defined recurring individual faces are intended to avoid the same issue. Continuity caveat: this pipeline's clip model generates each beat independently from a text prompt with no image2video/last-frame-continuation input wired up, so exact pixel-for-pixel continuity between clips isn't guaranteed - each beat's prompt describes matching start/end staging to maximize apparent continuity at the cut, but a visible discontinuity at some cuts is a real possibility given the model, not a mistake to fix by regenerating without asking first."
+}

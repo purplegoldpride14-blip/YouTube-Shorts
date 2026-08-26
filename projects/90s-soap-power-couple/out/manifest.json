@@ -1,0 +1,46 @@
+{
+  "asset_mode": "clips",
+  "ext": "mp4",
+  "beats": {
+    "1": {
+      "n": 1,
+      "prompt": "1990s daytime-soap-opera style scene, a traditional church wedding ceremony in progress, stained-glass window light, a minister at the altar mid-ceremony, a bride in a white wedding gown and veil and a groom in a black tuxedo facing each other at the altar, rows of formally dressed guests seated in the pews watching. The minister says clearly: \"If anyone here objects to this union, speak now, or forever hold your peace.\" Warm glossy 35mm film look, soft even church lighting, wide ensemble shot, heightened melodrama.",
+      "state": "done",
+      "historyId": "VvxjiaSMYrOTNKVOLFbu",
+      "url": "https://cdn.openart.ai/openart-ai/production/2026-08/create-video/hVD34jcNZMjgpWsjRsjz/video_1787703619271_038a3b96_1787703619325_1915a24a.mp4",
+      "file": "/workspace/youtube-shorts/projects/90s-soap-power-couple/frames/beat_001.mp4"
+    },
+    "2": {
+      "n": 2,
+      "prompt": "1990s daytime-soap-opera style scene, same church interior, stained-glass window light. The tall wooden doors at the back of the church burst open, a person in a dark rumpled coat stands silhouetted in the doorway, clearly out of place among the formally dressed guests. Rows of guests in the pews turn around in their seats, gasping in shock, murmurs rippling through the crowd. Warm glossy 35mm film look, soft even church lighting, wide shot from the altar looking back toward the doors, heightened melodrama.",
+      "state": "done",
+      "historyId": "kcobbdmrRoOfm1kT4mt2",
+      "url": "https://cdn.openart.ai/openart-ai/production/2026-08/create-video/hVD34jcNZMjgpWsjRsjz/video_1787704580396_41b45e79_1787704580539_c704c19b.mp4",
+      "file": "/workspace/youtube-shorts/projects/90s-soap-power-couple/frames/beat_002.mp4"
+    },
+    "3": {
+      "n": 3,
+      "prompt": "1990s daytime-soap-opera style scene, same church interior. The person in the dark rumpled coat strides quickly down the center aisle between the pews, guests on either side gasping and murmuring as they pass, heads turning to follow them. Warm glossy 35mm film look, soft even church lighting, tracking shot alongside the aisle, heightened melodrama.",
+      "state": "done",
+      "historyId": "7KXajkXXhpUZxzwbLRmc",
+      "url": "https://cdn.openart.ai/openart-ai/production/2026-08/create-video/hVD34jcNZMjgpWsjRsjz/video_1787703751948_cdab3d03_1787703752022_b1cbdc66.mp4",
+      "file": "/workspace/youtube-shorts/projects/90s-soap-power-couple/frames/beat_003.mp4"
+    },
+    "4": {
+      "n": 4,
+      "prompt": "1990s daytime-soap-opera style scene, same church interior, near the altar. The groom in a black tuxedo steps slightly in front of the bride in her white wedding gown and veil, protectively, as the person in the dark rumpled coat reaches the altar steps just a few feet away, guests in the pews watching in stunned silence. Warm glossy 35mm film look, soft even church lighting, medium shot, heightened melodrama.",
+      "state": "done",
+      "historyId": "MFC6SWs17YuzRyGx99zW",
+      "url": "https://cdn.openart.ai/openart-ai/production/2026-08/create-video/hVD34jcNZMjgpWsjRsjz/video_1787703759783_e2419272_1787703759942_21c12718.mp4",
+      "file": "/workspace/youtube-shorts/projects/90s-soap-power-couple/frames/beat_004.mp4"
+    },
+    "5": {
+      "n": 5,
+      "prompt": "1990s daytime-soap-opera style scene, same church interior, at the altar. The person in the dark rumpled coat stands facing the bride and groom and says clearly, loudly: \"I object! She's already married, to me!\" Wide shot pulling back to show the entire church full of guests frozen in stunned silence, the bride's hand flying to her mouth in shock. Warm glossy 35mm film look, soft even church lighting, wide ensemble shot, heightened melodrama.",
+      "state": "done",
+      "historyId": "7F5yxFJ5PNl9de0lxXlN",
+      "url": "https://cdn.openart.ai/openart-ai/production/2026-08/create-video/hVD34jcNZMjgpWsjRsjz/video_1787703757388_652bdf05_1787703758188_7e9c6672.mp4",
+      "file": "/workspace/youtube-shorts/projects/90s-soap-power-couple/frames/beat_005.mp4"
+    }
+  }
+}
