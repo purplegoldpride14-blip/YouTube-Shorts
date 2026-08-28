@@ -1,0 +1,23 @@
+{
+  "asset_mode": "clips",
+  "ext": "mp4",
+  "beats": {
+    "1": {
+      "n": 1,
+      "prompt": "1990s daytime-soap-opera style scene, a hospital room, soft fluorescent lighting, a woman lying in a hospital bed, hair loose, light hospital gown, small bandage at her temple, a man in a rumpled coat seated close beside the bed holding her hand, leaning in hopeful. He says warmly: \"Sweetheart, it's me. Do you remember anything?\" She stares back blankly, confused, slowly shakes her head, says quietly: \"I'm sorry... I don't know you.\" Hold on his face falling into devastated silence. Warm glossy 35mm film look, soft even hospital lighting, medium two-shot favoring his reaction at the end, heightened melodrama.",
+      "state": "done",
+      "historyId": "A7PfKgIAvwzn5EWBe7zp",
+      "url": "https://cdn.openart.ai/openart-ai/production/2026-08/create-video/hVD34jcNZMjgpWsjRsjz/video_1787883710507_658d1fe3_1787883710799_de6c784d.mp4",
+      "file": "/home/user/youtube-shorts/projects/90s-soap-amnesia-twist/frames/beat_001.mp4"
+    },
+    "2": {
+      "n": 2,
+      "prompt": "1990s daytime-soap-opera style scene, continuing in the same hospital room, soft fluorescent lighting, the same woman in the hospital bed, the same devastated man still seated close beside her. The door opens, another man walks in wearing a sharp suit. Her face instantly lights up with recognition, she reaches toward him, says brightly: \"Michael? Oh my god, I remember you!\" Cut to the first man's face, his hope collapsing into betrayal and heartbreak. Warm glossy 35mm film look, soft even hospital lighting, medium shot, heightened melodrama.",
+      "state": "done",
+      "historyId": "634422K0IdEFno66Lz6e (superseded)",
+      "url": "user-supplied replacement clip, not from this session's OpenArt calls",
+      "file": "/home/user/youtube-shorts/projects/90s-soap-amnesia-twist/frames/beat_002.mp4",
+      "note": "Original 7s text2video generation had a character-continuity break (hair/gown/jacket mismatch vs beat 1); user supplied this 10s replacement with matching wardrobe."
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "style_block": "1990s daytime-soap-opera cinematography, warm glossy 35mm film look, soft even fluorescent hospital lighting, medium two-shots, heightened melodrama in the performances and reactions.",
+  "characters": {
+    "wife": "a woman in a hospital bed, hair loose, light hospital gown, small bandage at her temple",
+    "husband": "a man in a rumpled coat, seated bedside",
+    "michael": "another man in a sharp suit, arriving mid-scene"
+  },
+  "reference_notes": "Generic soap-opera 'amnesia twist' trope - not a recreation of any real show's characters, actors, or episode. Only 2 clips (10s + 7s), generated independently via text2video - true last-frame-to-startFrame continuation was investigated and is not achievable in this environment (no upload-to-asset-reference tool exposed; OpenArt has no public API outside MCP either). Continuity between the two clips relies entirely on both prompts describing the same room, same characters, and matching staging at the cut, not pixel-level frame chaining - a visible discontinuity at the cut is possible given the model, not a mistake to fix by regenerating without asking first (also: no spare credit budget for retries on this project)."
+}

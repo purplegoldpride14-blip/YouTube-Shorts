@@ -1,0 +1,13 @@
+{
+  "slug": "90s-soap-amnesia-twist",
+  "created": "2026-08-28",
+  "asset_mode": "clips",
+  "narration": "none",
+  "audio": "none",
+  "niche": "Nostalgia",
+  "topic": "Classic 1990s-daytime-soap-opera amnesia plot twist - a woman wakes with no memory of her husband, then instantly recognizes another man, two clips (10s setup + 7s twist), not a recreation of any specific real show's characters or episode.",
+  "title": "The Amnesia Twist Every 90s Soap Pulled At Least Once",
+  "no_hashtags": false,
+  "style_locked": false,
+  "notes": "Only 2 beats (10s + 10s = 20s), not the pipeline's usual CLIPS_PER_SHORT=5 - a deliberate one-off deviation to fit a tight OpenArt credit budget. scenes.json/beats.json hand-written to match rather than run through scene_plan.py's beats command, which hard-enforces exactly 5 entries. Beat 2 was originally generated at 7s via text2video but had a character-continuity break (wife's hair/gown color and husband's jacket changed between clips); the user supplied a replacement 10s clip 2 directly (generated outside this session) with matching wardrobe/hair, which is what's assembled here."
+}
