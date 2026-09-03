@@ -1,0 +1,23 @@
+[
+  {
+    "n": 1,
+    "start": 0.0,
+    "end": 7.5,
+    "dur": 7.5,
+    "text": "Lawyer holds up the envelope, family reacts at the conference table"
+  },
+  {
+    "n": 2,
+    "start": 7.5,
+    "end": 16.0,
+    "dur": 8.5,
+    "text": "Letter is read aloud, reactions escalate, young woman shocked, father figure's face hardens"
+  },
+  {
+    "n": 3,
+    "start": 16.0,
+    "end": 26.005,
+    "dur": 10.005,
+    "text": "Father figure storms out through the door"
+  }
+]

@@ -1,0 +1,13 @@
+{
+  "slug": "paternity-reveal-letter",
+  "created": "2026-09-03",
+  "asset_mode": "clips",
+  "narration": "none",
+  "audio": "none",
+  "niche": "Drama",
+  "topic": "Family gathered in a lawyer's office for a paternity reveal - an envelope is opened, the family reacts in shock, and it culminates in the father figure's face hardening before he storms out. Three user-supplied clips (not generated via OpenArt in this session), reordered from upload order to narrative order and cleaned of an AI mistake before assembly.",
+  "title": "He Wasn't Her Father... And Everyone Just Found Out",
+  "no_hashtags": false,
+  "style_locked": false,
+  "notes": "Source clips were supplied by the user, not generated through this pipeline's OpenArt calls, so there is no prompts.json entry driving generation. Uploaded as (A) envelope reveal, (B) man storms out, (C) letter-reading reactions - reordered to A->C->B after visual continuity analysis showed C's ending face matches B's opening face exactly. Clip A trimmed 10.0s->7.5s and clip C trimmed 10.0s->8.5s to cut redundant frozen-hold tails for pacing. Clips B and C also had a video-player timestamp/scrubber bar baked into the source pixels (bottom of frame) that was cropped out and the frame zoom-filled back to 720x1280. Assembled A->C->B, then upscaled to this pipeline's 1080x1920/30fps standard and loudness-normalized to -14 LUFS."
+}

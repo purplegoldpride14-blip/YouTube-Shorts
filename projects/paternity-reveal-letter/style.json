@@ -1,0 +1,10 @@
+{
+  "style_block": "Modern legal-drama cinematography, warm wood-paneled office lighting through venetian blinds, wide ensemble shots at a conference table, heightened melodrama in the reactions.",
+  "characters": {
+    "family_matriarch": "an older woman in a cream blazer seated at the head of the table",
+    "young_woman": "a young woman in a navy dress, shocked reaction",
+    "father_figure": "an older man with grey hair, stern/angry expression, who storms out",
+    "lawyer": "a woman in a black suit and glasses holding the envelope/letter"
+  },
+  "reference_notes": "Clips were supplied by the user, not generated in this session. No period styling (modern office, contemporary wardrobe) - deliberately tagged niche 'Drama' rather than '90s nostalgia'. Continuity note: clips B and C had a video-player UI (timestamp/scrubber bar) baked into the source pixels, cropped out via a zoom-fill before assembly - the resulting frame has a slight zoom vs clip A, which was already clean."
+}

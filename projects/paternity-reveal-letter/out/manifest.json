@@ -1,0 +1,33 @@
+{
+  "asset_mode": "clips",
+  "ext": "mp4",
+  "beats": {
+    "1": {
+      "n": 1,
+      "prompt": "N/A - user-supplied clip (envelope reveal at the conference table), not generated via OpenArt in this session",
+      "state": "done",
+      "historyId": null,
+      "url": null,
+      "file": "/home/user/youtube-shorts/projects/paternity-reveal-letter/frames/beat_001.mp4",
+      "note": "Trimmed 10.0s -> 7.5s, cutting a redundant frozen wide-shot hold at the tail. No UI-bar defect on this clip."
+    },
+    "2": {
+      "n": 2,
+      "prompt": "N/A - user-supplied clip (letter read aloud, reactions), not generated via OpenArt in this session",
+      "state": "done",
+      "historyId": null,
+      "url": null,
+      "file": "/home/user/youtube-shorts/projects/paternity-reveal-letter/frames/beat_002.mp4",
+      "note": "Trimmed 10.0s -> 8.5s (redundant static hold at tail) and had a video-player timestamp bar cropped out of the bottom of frame, then zoom-filled back to 720x1280."
+    },
+    "3": {
+      "n": 3,
+      "prompt": "N/A - user-supplied clip (father figure storms out), not generated via OpenArt in this session",
+      "state": "done",
+      "historyId": null,
+      "url": null,
+      "file": "/home/user/youtube-shorts/projects/paternity-reveal-letter/frames/beat_003.mp4",
+      "note": "Full 10.005s kept. Had the same video-player timestamp bar cropped out and zoom-filled back to 720x1280."
+    }
+  }
+}
