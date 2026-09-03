@@ -1,0 +1,13 @@
+{
+  "slug": "answering-machine-affair",
+  "created": "2026-09-03",
+  "asset_mode": "clips",
+  "narration": "none",
+  "audio": "none",
+  "niche": "Nostalgia",
+  "topic": "Classic 90s-styled affair-discovery scene - a woman comes home, listens to an answering machine message that reveals her husband's affair, then confronts him when he walks in. Three user-supplied clips (not generated via OpenArt in this session), trimmed to remove an AI materialization glitch and to the user's own specified in/out points.",
+  "title": "She Pressed Play... And Her Marriage Was Over",
+  "no_hashtags": false,
+  "style_locked": false,
+  "notes": "Source clips were supplied by the user (uploaded, not generated through this pipeline's OpenArt calls), so there is no prompts.json entry driving generation. Clip 1 (answering machine) kept 0-9.833s. Clip 2 (discovers affair) originally had a husband-materializing-via-ghosting glitch around 7.25-7.6s; user's final direction was to cut everything before 7.750s and keep 7.750s-end (2.255s kept). Clip 3 (confront) kept 1.333s-end (8.672s kept). Assembled in order answering_machine -> discovers -> confront. Audio loudness-normalized to -14 LUFS to match this pipeline's standard target."
+}

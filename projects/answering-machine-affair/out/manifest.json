@@ -1,0 +1,33 @@
+{
+  "asset_mode": "clips",
+  "ext": "mp4",
+  "beats": {
+    "1": {
+      "n": 1,
+      "prompt": "N/A - user-supplied clip (Woman_listening_to_answering_machine), not generated via OpenArt in this session",
+      "state": "done",
+      "historyId": null,
+      "url": null,
+      "file": "/home/user/youtube-shorts/projects/answering-machine-affair/frames/beat_001.mp4",
+      "note": "Kept 0-9.833s of the original 10.005s clip per user's exact instruction."
+    },
+    "2": {
+      "n": 2,
+      "prompt": "N/A - user-supplied clip (Woman_discovers_husbands_affair), not generated via OpenArt in this session",
+      "state": "done",
+      "historyId": null,
+      "url": null,
+      "file": "/home/user/youtube-shorts/projects/answering-machine-affair/frames/beat_002.mp4",
+      "note": "Original clip had a husband-materializing ghosting/double-exposure glitch around 7.25-7.6s. User's final direction: cut everything before 7.750s, keep 7.750s-end (2.255s kept)."
+    },
+    "3": {
+      "n": 3,
+      "prompt": "N/A - user-supplied clip (Woman_confronts_cheating_husband), not generated via OpenArt in this session",
+      "state": "done",
+      "historyId": null,
+      "url": null,
+      "file": "/home/user/youtube-shorts/projects/answering-machine-affair/frames/beat_003.mp4",
+      "note": "Kept 1.333s-end (8.672s kept) of the original 10.005s clip per user's exact instruction."
+    }
+  }
+}
